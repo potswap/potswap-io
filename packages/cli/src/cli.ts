@@ -11,7 +11,7 @@ import {
   type Config, type Signer, type BalancesFn, type FetchFn, type Rpc, type StrategyStore, type DcaStrategy, type RebalanceStrategy, type OpsStore, FileOpsStore,
 } from '@potswap_io/sdk'
 
-export const VERSION = '0.5.0'
+export const VERSION = '0.5.1'
 
 export interface Io { out(line: string): void; err(line: string): void }
 export interface Deps {

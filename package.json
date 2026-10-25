@@ -15,7 +15,7 @@
   "description": "Potswap: Solana DeFi for humans and AI agents — SDK, CLI and MCP server",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/potswap-io/potswap.git"
+    "url": "git+https://github.com/potswap/potswap-io.git"
   },
   "license": "MIT"
 }

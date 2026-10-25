@@ -1786,7 +1786,7 @@ Everything Jupiter Swap V2 aggregates: Metis, JupiterZ, DFlow and OKX compete pe
 
 ### Where is the code?
 
-The MCP package is MIT licensed and published on npm as [`@potswap_io/mcp`](https://www.npmjs.com/package/@potswap_io/mcp). See [License](/resources/license/).
+Open source (MIT) at [github.com/potswap/potswap-io](https://github.com/potswap/potswap-io): the SDK, the CLI, the MCP server and this docs site. Packages on npm: [`@potswap_io/mcp`](https://www.npmjs.com/package/@potswap_io/mcp), [`@potswap_io/sdk`](https://www.npmjs.com/package/@potswap_io/sdk), [`@potswap_io/cli`](https://www.npmjs.com/package/@potswap_io/cli). See [License](/resources/license/).
 
 ---
 
