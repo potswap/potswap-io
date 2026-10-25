@@ -1,0 +1,21 @@
+{
+  "name": "potswap",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/sdk",
+    "packages/cli",
+    "mcp"
+  ],
+  "scripts": {
+    "build": "npm run build -w packages/sdk && npm run build -w mcp && npm run build -w packages/cli",
+    "test": "npm test -w packages/sdk && npm test -w mcp && npm test -w packages/cli",
+    "typecheck": "npm run typecheck -w packages/sdk && npm run typecheck -w mcp && npm run typecheck -w packages/cli"
+  },
+  "description": "Potswap: Solana DeFi for humans and AI agents — SDK, CLI and MCP server",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/potswap-io/potswap.git"
+  },
+  "license": "MIT"
+}

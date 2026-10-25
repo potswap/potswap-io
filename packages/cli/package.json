@@ -1,0 +1,53 @@
+{
+  "name": "@potswap_io/cli",
+  "version": "0.5.0",
+  "description": "potswap: command-line Solana swaps, transfers, wallet, strategies and POT rewards on the Potswap engine. Same limits and fee as the MCP server.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "potswap": "dist/index.js"
+  },
+  "main": "dist/cli.js",
+  "types": "dist/cli.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/potswap-io/mcp.git"
+  },
+  "homepage": "https://potswap-docs.pages.dev",
+  "keywords": [
+    "solana",
+    "swap",
+    "cli",
+    "jupiter",
+    "potswap",
+    "ai-agent"
+  ],
+  "dependencies": {
+    "@potswap_io/sdk": "^0.4.1",
+    "@solana/web3.js": "^1.99.0",
+    "@solana/spl-token": "^0.4.15",
+    "bs58": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

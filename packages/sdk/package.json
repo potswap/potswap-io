@@ -1,0 +1,57 @@
+{
+  "name": "@potswap_io/sdk",
+  "version": "0.4.1",
+  "description": "Potswap SDK: best-route Solana swaps with hard spending limits, transfers, wallet, strategies (DCA / rebalance / TP-SL / limit) and POT rewards. The engine behind @potswap_io/mcp and the potswap CLI. Non-custodial.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "sync-shared": "node scripts/sync-shared.mjs",
+    "prepublishOnly": "npm run sync-shared && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/potswap-io/mcp.git"
+  },
+  "homepage": "https://potswap-docs.pages.dev",
+  "keywords": [
+    "solana",
+    "swap",
+    "jupiter",
+    "ai-agent",
+    "potswap",
+    "sdk",
+    "defi"
+  ],
+  "dependencies": {
+    "@noble/curves": "^1.9.7",
+    "@noble/hashes": "^1.8.0",
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.99.0",
+    "bs58": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

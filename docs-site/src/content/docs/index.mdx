@@ -1,0 +1,57 @@
+---
+title: Potswap Docs
+description: Build on Solana with Potswap — best-route swaps, standing strategies and POT rewards for AI agents, through one non-custodial MCP server.
+template: splash
+hero:
+  title: Build on Solana with Potswap
+  tagline: One MCP server gives your agent a wallet, best-route swaps across every Solana DEX, transfers, liquid staking, DCA / rebalance / take-profit / limit strategies, token research with risk flags, and POT rewards for every fee it pays. Non-custodial, free to run.
+  actions:
+    - text: Quickstart
+      link: /getting-started/quickstart/
+      icon: right-arrow
+    - text: MCP tools reference
+      link: /agents/mcp-tools/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid, Code } from '@astrojs/starlight/components';
+
+## Install
+
+No install step. Node 20+ and one command:
+
+<Code code="npx -y @potswap_io/mcp" lang="bash" />
+
+Add it to Claude Desktop, Claude Code or Cursor in a minute. Without a key the server runs read-only (search, quotes, trending lists, points of any wallet). Add `SOLANA_PRIVATE_KEY` or `SOLANA_KEYPAIR_PATH`, or let the agent run `wallet_create` and fund the address it prints.
+
+<CardGrid stagger>
+	<Card title="Quickstart" icon="rocket">
+		Configure your MCP host, get a first quote in minutes, and turn on trading when you are ready.
+		[Get started →](/getting-started/quickstart/)
+	</Card>
+	<Card title="Agent integration" icon="puzzle">
+		All 27 tools with inputs and outputs: `wallet_create`, `get_quote`, `swap`, `transfer`, `stake_sol`, `dca_create`, `limit_order_create` and more.
+		[Tools reference →](/agents/mcp-tools/)
+	</Card>
+	<Card title="Routing & fees" icon="random">
+		Jupiter Swap V2 meta-aggregation (Metis, JupiterZ, DFlow, OKX compete per order), and the 2.5% / 1% fee schedule.
+		[How routing works →](/routing/how-routing-works/)
+	</Card>
+	<Card title="Security" icon="approve-check">
+		Keys never leave your machine, every output is redacted, and software-enforced caps guard every swap.
+		[Non-custodial by design →](/security/non-custodial/)
+	</Card>
+</CardGrid>
+
+## What is live today
+
+| Capability | Status |
+|---|---|
+| `@potswap_io/mcp` 0.4.0: 27 tools (wallet, swaps, transfers, staking, history, PnL, price history, 4 strategy kinds, launch status), local signing, redaction, caps, allowlists, dry run, daemon | Available |
+| Fee schedule (2.5% standard, 1% at or above $1,000) | In code; the fee is charged once Potswap's referral account is configured |
+| Points and economy engine (fee paid → points, Season 0 airdrop replay, 30-day seasons, reward balances, claims, launch meter) | Built and deployed; `get_points` returns `enabled: false` until the engine is switched on, the meter shows 0 / 500 SOL until the pool address is published |
+| Token launch, claim program, staking program, burn | After the meter fills (see [Roadmap](/resources/roadmap/)) |
+| `@potswap/sdk`, `potswap` CLI, direct DEX adapters | Roadmap |
+
+This site is also available as [`/llms.txt`](/llms.txt) and [`/llms-full.txt`](/llms-full.txt) for agents that read documentation.

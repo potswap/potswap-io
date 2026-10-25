@@ -1,0 +1,1981 @@
+# Potswap Docs
+
+> Solana DeFi infrastructure for AI agents: best-route swaps (Jupiter Swap V2 meta-aggregation), DCA / rebalance / take-profit strategies and POT rewards through one non-custodial MCP server, `@potswap_io/mcp`. Install: `npx -y @potswap_io/mcp`.
+
+`@potswap_io/mcp` 0.4.0 (27 tools) is available today; the Potswap API serves quotes, orders, token data, points, the launch meter and claims. Pages marked roadmap or planned describe specified, unbuilt work. `@potswap_io/sdk` (the engine as a library) and `@potswap_io/cli` (the `potswap` command) are published too.
+
+Full text of every page. Canonical site: https://docs.potswap.io
+
+---
+
+# Potswap Docs
+
+Source: https://docs.potswap.io/
+
+> Build on Solana with Potswap — best-route swaps, standing strategies and POT rewards for AI agents, through one non-custodial MCP server.
+
+## Install
+
+No install step. Node 20+ and one command:
+
+```bash
+npx -y @potswap_io/mcp
+```
+
+Add it to Claude Desktop, Claude Code or Cursor in a minute. Without a key the server runs read-only (search, quotes, trending lists, points of any wallet). Add `SOLANA_PRIVATE_KEY` or `SOLANA_KEYPAIR_PATH`, or let the agent run `wallet_create` and fund the address it prints.
+
+
+### Quickstart
+
+Configure your MCP host, get a first quote in minutes, and turn on trading when you are ready.
+[Get started →](/getting-started/quickstart/)
+
+### Agent integration
+
+All 27 tools with inputs and outputs: `wallet_create`, `get_quote`, `swap`, `transfer`, `stake_sol`, `dca_create`, `limit_order_create` and more.
+[Tools reference →](/agents/mcp-tools/)
+
+### Routing & fees
+
+Jupiter Swap V2 meta-aggregation (Metis, JupiterZ, DFlow, OKX compete per order), and the 2.5% / 1% fee schedule.
+[How routing works →](/routing/how-routing-works/)
+
+### Security
+
+Keys never leave your machine, every output is redacted, and software-enforced caps guard every swap.
+[Non-custodial by design →](/security/non-custodial/)
+
+
+
+## What is live today
+
+| Capability | Status |
+|---|---|
+| `@potswap_io/mcp` 0.4.0: 27 tools (wallet, swaps, transfers, staking, history, PnL, price history, 4 strategy kinds, launch status), local signing, redaction, caps, allowlists, dry run, daemon | Available |
+| Fee schedule (2.5% standard, 1% at or above $1,000) | In code; the fee is charged once Potswap's referral account is configured |
+| Points and economy engine (fee paid → points, Season 0 airdrop replay, 30-day seasons, reward balances, claims, launch meter) | Built and deployed; `get_points` returns `enabled: false` until the engine is switched on, the meter shows 0 / 500 SOL until the pool address is published |
+| Token launch, claim program, staking program, burn | After the meter fills (see [Roadmap](/resources/roadmap/)) |
+| `@potswap/sdk`, `potswap` CLI, direct DEX adapters | Roadmap |
+
+This site is also available as [`/llms.txt`](/llms.txt) and [`/llms-full.txt`](/llms-full.txt) for agents that read documentation.
+
+---
+
+# Introduction
+
+Source: https://docs.potswap.io/getting-started/introduction/
+
+> What Potswap is, who it is for, and what exists today versus what is planned.
+
+Potswap is Solana DeFi infrastructure for AI agents. It is not an agent itself: it is the swap engine, the safety rails and the rewards layer that any agent can plug into through the [Model Context Protocol](https://modelcontextprotocol.io) (MCP).
+
+## What you get
+
+- **Best-route swaps.** Every order is quoted through Jupiter Swap V2 meta-aggregation, where Metis, JupiterZ, DFlow and OKX compete and the best net route wins. See [How routing works](/routing/how-routing-works/).
+- **A wallet of its own.** `wallet_create` gives an agent a keypair stored on your machine; `transfer`, `get_transaction` and `get_history` cover the operations around trading. See the [tools reference](/agents/mcp-tools/#wallet-and-operations).
+- **Standing strategies.** DCA, portfolio rebalancing, take-profit / stop-loss and limit orders run as sequences of ordinary swaps, inside your MCP host or as a 24/7 daemon. See [Strategies](/agents/strategies/).
+- **Liquid staking.** `stake_sol` / `unstake_sol` move between SOL and jitoSOL or mSOL at the best route.
+- **Token research.** Search, full token records with audit data and risk badges (`riskLevel` 0 safe to 3 danger), and trending / new / top / graduating lists.
+- **Wallet views.** SOL and SPL balances with USD values, positions with average cost and PnL, price history, POT points, reward balance, level and the leaderboard.
+- **Rewards.** Potswap charges a fee inside the swap; the fee you pay is credited back to your wallet as POT points. See [Points and POT](/economy/points-and-pot/).
+
+## How it is built
+
+- **Non-custodial and local-first.** The MCP server runs on your machine and signs with your own keypair. The secret never leaves the process and is redacted from every output, log line and state file. See [Non-custodial by design](/security/non-custodial/).
+- **Safe by default.** Every write tool requires `confirm: true`. Per-trade cap 1 SOL, slippage cap 3%, daily strategy cap 5 SOL, token and recipient allowlists, dry-run mode, and a 0.01 SOL reserve that is always kept. Every error states whether funds were debited. See [Limits and policies](/security/limits-and-policies/).
+- **$0 to run.** The server talks only to `potswap.io`, which proxies Jupiter and an RPC with its own keys. You need no API keys. Bring your own RPC if you trade a lot.
+- **Open source.** MIT licensed. See [License](/resources/license/).
+
+## What exists today
+
+The package [`@potswap_io/mcp`](https://www.npmjs.com/package/@potswap_io/mcp) (version 0.4.0) ships 27 tools. That is the surface documented as *available* on this site. The Potswap API behind it serves quotes, orders, token data, points, the launch meter and claims.
+
+The economy engine (Season 0 airdrop replay, 30-day seasons, reward balances, claim ladder, launch meter) is built and deployed; it reports `enabled: false` / `0 / 500 SOL` until Potswap switches on the points database and publishes the pool address. The token itself, the on-chain claim and staking programs, the `@potswap/sdk` package, the `potswap` CLI, direct DEX adapters and a remote MCP endpoint are not built. Those items are marked **Roadmap** or **Planned** wherever they appear, and collected on the [Roadmap](/resources/roadmap/) page.
+
+## Where to go next
+
+1. [Quickstart](/getting-started/quickstart/): configure your host and get a first quote.
+2. [MCP tools reference](/agents/mcp-tools/): every tool, input and output.
+3. [Configuration](/agents/configuration/): every environment variable.
+
+---
+
+# Quickstart
+
+Source: https://docs.potswap.io/getting-started/quickstart/
+
+> Add the Potswap MCP server to Claude Desktop, Claude Code or Cursor and get a first quote in minutes.
+
+The Potswap MCP server runs with `npx`; there is no install step. You need Node 20 or newer.
+
+```bash
+npx -y @potswap_io/mcp
+```
+
+## 1. Add it to your MCP host
+
+### Claude Desktop
+
+Open Settings → Developer → Edit Config and add the server to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "potswap": {
+      "command": "npx",
+      "args": ["-y", "@potswap_io/mcp"],
+      "env": {
+        "SOLANA_PRIVATE_KEY": "<base58 secret or JSON byte array>",
+        "POTSWAP_MAX_TRADE_SOL": "0.5"
+      }
+    }
+  }
+}
+```
+
+### Claude Code
+
+```bash
+claude mcp add potswap -e SOLANA_KEYPAIR_PATH=~/.config/solana/id.json -- npx -y @potswap_io/mcp
+```
+
+### Cursor
+
+Create `.cursor/mcp.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "potswap": {
+      "command": "npx",
+      "args": ["-y", "@potswap_io/mcp"],
+      "env": { "SOLANA_KEYPAIR_PATH": "/home/you/.config/solana/id.json" }
+    }
+  }
+}
+```
+
+Restart the host. The server logs a ready line to stderr, for example `potswap-mcp v0.4.0 ready · api=https://www.potswap.io · maxTradeSol=1 · maxSlippageBps=300`.
+
+## 2. Start read-only (no key)
+
+You can leave the key out entirely. Without `SOLANA_PRIVATE_KEY` or `SOLANA_KEYPAIR_PATH` the server starts in read-only mode: `search_tokens`, `get_token`, `get_trending`, `get_price_history`, `get_quote`, `get_leaderboard`, `get_launch_status`, and `get_balances` / `get_positions` / `get_points` / `get_history` / `get_transaction` for any wallet you pass explicitly all work. `swap`, `transfer`, the stake tools and the strategy creation tools return:
+
+```text
+Wallet not configured. Set SOLANA_PRIVATE_KEY or SOLANA_KEYPAIR_PATH, or run wallet_create. No funds were debited.
+```
+
+This is the recommended way to try the server before giving it a wallet.
+
+## 3. Get a first quote
+
+Ask your agent for a quote, or call the tool directly:
+
+```json
+{
+  "tool": "get_quote",
+  "arguments": {
+    "inputMint": "So11111111111111111111111111111111111111112",
+    "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "amount": 0.1
+  }
+}
+```
+
+`amount` is in UI units of the input token (`1` = 1 SOL), never lamports. The response includes `outAmount`, `price`, `priceImpactPct`, `feeBps`, `feeLabel`, `router` and `expiresAt`.
+
+Example prompt once the server is connected:
+
+> Check BONK's risk flags, and if `riskLevel` is 0 or 1, quote 0.1 SOL worth.
+
+The agent calls `get_token`, then `get_quote`.
+
+## 4. Turn on trading
+
+1. Create a **dedicated agent wallet** holding only the funds you want the agent to control. Either export one from Phantom / `solana-keygen`, or let the agent call `wallet_create { confirm: true }`: it writes `~/.potswap/wallet.json` (mode 0600), prints the public key, and the server loads it on every later start. Back that file up; it is the only copy.
+2. If you brought your own key, set `SOLANA_PRIVATE_KEY` (base58 secret or JSON byte array) or `SOLANA_KEYPAIR_PATH` (path to a `solana-keygen` JSON file). Fund the address with SOL; keep at least 0.01 SOL for fees.
+3. Keep `POTSWAP_DRY_RUN=true` at first: `swap` with `confirm: true` then returns what it *would* have done and signs nothing.
+4. Lower the caps while you build trust: `POTSWAP_MAX_TRADE_SOL=0.5`, `POTSWAP_MAX_SLIPPAGE_BPS=100`. For an unattended agent also set `POTSWAP_ALLOWED_TOKENS` (the mints it may trade) and `POTSWAP_ALLOWED_RECIPIENTS` (where `transfer` may send).
+5. Remove `POTSWAP_DRY_RUN` when you are comfortable. `swap` still refuses to execute unless the call carries `confirm: true`.
+
+A first real swap:
+
+```json
+{
+  "tool": "swap",
+  "arguments": {
+    "inputMint": "So11111111111111111111111111111111111111112",
+    "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "amount": 0.05,
+    "confirm": true
+  }
+}
+```
+
+Returns `signature`, `explorerUrl`, `inAmount`, `outAmount`, `router`, `feeBps`, `feeUsd` and `pointsAdded`.
+
+## Next
+
+- [MCP tools reference](/agents/mcp-tools/) for every input and output.
+- [Configuration](/agents/configuration/) for every environment variable.
+- [Strategies](/agents/strategies/) to create a DCA, a rebalance, a take-profit / stop-loss or a limit order.
+- [Troubleshooting](/getting-started/troubleshooting/) when something does not work.
+
+---
+
+# Troubleshooting
+
+Source: https://docs.potswap.io/getting-started/troubleshooting/
+
+> The errors you will meet, what they mean, and what to do. Every Potswap error states whether funds were debited.
+
+Every error message from the Potswap MCP server states whether funds were debited. If a message says `No funds were debited`, nothing was signed or sent.
+
+## "Potswap is busy; retry in a few seconds" (HTTP 429 / 503)
+
+Potswap's hosted proxy shares one Jupiter API key at the free tier (1 request per second). When the upstream returns `429` or `503`, the server waits 1.1 s and retries once; if it is still busy you get:
+
+```text
+Potswap is busy; retry in a few seconds. No funds were debited.
+```
+
+What to do:
+
+- Retry after a few seconds. Agents that poll should back off.
+- If you trade a lot, set `SOLANA_RPC_URL` to your own RPC. Balance and confirmation reads then stop going through the shared proxy. Quotes and orders still route through `potswap.io`.
+- `get_trending` is edge-cached and refreshed every 15 s; calling it more often returns the same data.
+
+## "Wallet not configured"
+
+```text
+Wallet not configured. Set SOLANA_PRIVATE_KEY or SOLANA_KEYPAIR_PATH, or run wallet_create. No funds were debited.
+```
+
+The server started in read-only mode. Either call `wallet_create { confirm: true }` (the agent gets a wallet at `POTSWAP_STATE_DIR/wallet.json`, loaded on later starts), or set one of the two variables in the `env` block of your host config and restart the host. Check:
+
+- `SOLANA_PRIVATE_KEY` must be a base58 secret (64 bytes, or a 32-byte seed) or a JSON array of 64 bytes. Other formats fail with `Private key is not valid base58 or a JSON byte array` or `Keypair JSON must be an array of 64 bytes`.
+- `SOLANA_KEYPAIR_PATH` must point to a readable `solana-keygen` JSON file. An unreadable path fails with `Cannot read keypair file at SOLANA_KEYPAIR_PATH`.
+- `SOLANA_PRIVATE_KEY` wins when both are set; `wallet.json` in the state directory is used only when neither is set.
+
+Read-only tools (`search_tokens`, `get_token`, `get_trending`, `get_price_history`, `get_quote`, `get_leaderboard`, `get_launch_status`, `get_wallet`, `strategy_list`, `strategy_runs`) work without a wallet. `get_balances`, `get_positions`, `get_points`, `get_history` and `get_transaction` work without a wallet when you pass `wallet` explicitly.
+
+## "Token not in POTSWAP_ALLOWED_TOKENS" / "Recipient not in POTSWAP_ALLOWED_RECIPIENTS"
+
+```text
+Token not in POTSWAP_ALLOWED_TOKENS. No funds were debited.
+Recipient not in POTSWAP_ALLOWED_RECIPIENTS. No funds were debited.
+```
+
+An allowlist is set and the mint (both sides of a swap, stake or strategy leg) or the transfer recipient is not on it. The check runs before any quote. Add the address to the comma-separated list in your host config, or unset the variable to allow everything. `get_wallet` shows the lists in force.
+
+## "No route for this pair right now"
+
+Jupiter found no route for the pair and amount. Common causes:
+
+- Very low liquidity or a brand-new token. Try a smaller amount or check `get_token` for `liquidity`.
+- `Amount too small for this route. Try a larger amount.` is returned when the order is below the route minimum.
+- The output mint is wrong. Use `search_tokens` to confirm the mint address; `get_quote` and `swap` validate that mints are 32–44 base58 characters but cannot know whether a mint exists.
+
+No funds are debited when a route is missing: the failure happens before anything is signed.
+
+## "Keep at least 0.01 SOL for fees"
+
+The server always keeps a 0.01 SOL reserve for network fees. If your SOL balance minus the reserve is below the requested amount:
+
+```text
+Insufficient SOL: balance 0.0150, keep at least 0.01 SOL for fees. No funds were debited.
+```
+
+Top up the agent wallet or reduce `amount`. The reserve is not configurable.
+
+## "Refused by safety limit"
+
+Two messages, both before signing:
+
+```text
+Refused by safety limit: 5 SOL ≈ 5.000 SOL is above POTSWAP_MAX_TRADE_SOL (1). No funds were debited.
+Refused by safety limit: slippage 5% is above POTSWAP_MAX_SLIPPAGE_BPS (3%). No funds were debited.
+```
+
+Raise the cap in your host config if the trade is intended. If `amount` is 1,000,000 or more the message adds `Hint: amount is in UI units (1 = 1 SOL), not lamports.` — the most common cause is passing raw units.
+
+Strategy legs can also hit the daily cap: `Daily cap reached (5 SOL). Next legs resume at 00:00 UTC. No funds were debited.` The leg is skipped and logged; the strategy stays active.
+
+## "Quote only (confirm=true to execute)"
+
+Not an error. `swap` without `confirm: true` returns the quote and `confirmRequired: true`. Add `confirm: true` to execute.
+
+## "DRY RUN, nothing signed"
+
+`POTSWAP_DRY_RUN` is set. Remove it (or set it to `false`) to execute real swaps. Accepted truthy values are `1`, `true` and `yes` (case-insensitive).
+
+## Swap failed after signing
+
+These messages come from the on-chain execution step:
+
+| Message | Meaning |
+|---|---|
+| `Price moved beyond your slippage tolerance. No funds were debited. Try again or raise slippage in settings.` | The route's price moved before landing. |
+| `The quote expired before the transaction landed. No funds were debited. Please try again.` | The order's block height passed. |
+| `The network was congested and the transaction did not land. No funds were debited. Please try again.` | Jupiter's execute reported the transaction did not land. |
+| `Insufficient balance for this swap, including network fees. No funds were debited.` | Balance changed between quote and execution. |
+
+When a signature exists the result includes `signature` and `explorerUrl` so you can verify on Solscan. For messages that end with `If the transaction did not land, no funds were debited.`, check the explorer link.
+
+## Strategy paused itself
+
+After three consecutive failed legs a strategy is paused with `pausedReason: "3 consecutive failures; resume after checking the wallet and route."`. Inspect `strategy_runs {id}` for the reasons, fix the cause (balance, route, reserve), then `strategy_resume {id}`.
+
+## "no scheduler is running in this process"
+
+A strategy was created but another process holds the scheduler lock on the same `POTSWAP_STATE_DIR`. Only one process per state directory runs strategies; the others can still read and write them. Run the daemon (`npx -y @potswap_io/mcp --daemon`) on an always-on machine, or close the other process. See [Strategies](/agents/strategies/#who-runs-the-clock).
+
+## Points show `enabled: false`
+
+`get_points` and `get_leaderboard` return `{ enabled: false }` with a note when the points engine is not switched on. Swaps made now still pay the Potswap fee when the fee is configured; points start with Season 1. See [Points and POT](/economy/points-and-pot/).
+
+---
+
+# MCP tools reference
+
+Source: https://docs.potswap.io/agents/mcp-tools/
+
+> Every tool exposed by @potswap_io/mcp 0.8.0 with its inputs, outputs and error behaviour.
+
+`@potswap_io/mcp` 0.8.0 registers 40 tools: research (4), trading (3), wallet and operations (8), rewards (3), strategies (9), the launch meter (1), observations (4), lending (4) and liquidity (4). Each returns a human-readable text summary plus `structuredContent` with the full JSON; both pass through secret redaction before leaving the process. Errors set `isError: true` and always state whether funds were debited.
+
+Conventions used below:
+
+- **Mint**: a base58 string of 32–44 characters. SOL is `So11111111111111111111111111111111111111112`; USDC is `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`.
+- **UI units**: amounts are in the token's display units (`1` = 1 SOL), never raw lamports or base units.
+- **Agent wallet**: the keypair loaded from `SOLANA_PRIVATE_KEY`, `SOLANA_KEYPAIR_PATH` or `POTSWAP_STATE_DIR/wallet.json` (created by `wallet_create`). Tools marked *wallet optional* fall back to it when `wallet` is omitted.
+- **Write tools** (`swap`, `transfer`, `stake_sol`, `unstake_sol`, every `*_create`, `wallet_create`) require `confirm: true`; without it they return what they would do and change nothing. `POTSWAP_DRY_RUN=true` makes every write tool a report.
+
+## Research
+
+### `search_tokens`
+
+Find tokens by name, symbol or mint address. Returns up to 20.
+
+| Input | Type | Notes |
+|---|---|---|
+| `query` | string, 1–64 chars | name, symbol or mint |
+
+Output: `tokens[]` with `mint`, `symbol`, `name`, `decimals`, `usdPrice`, `mcap`, `liquidity`, `isVerified`.
+
+### `get_token`
+
+Full token record with risk badges.
+
+| Input | Type | Notes |
+|---|---|---|
+| `mint` | mint | required |
+
+Output: `token` (price, mcap, liquidity, holder count, 5m / 1h / 6h / 24h stats, audit data), `riskBadges[]` (each with a `label`) and `riskLevel` from `0` (safe) to `3` (danger).
+
+### `get_trending`
+
+Discovery lists served from Potswap's edge cache, refreshed every 15 s.
+
+| Input | Type | Default |
+|---|---|---|
+| `kind` | `new` \| `trending` \| `top` \| `graduating` | `trending` |
+| `limit` | integer 1–50 | `20` |
+
+Output: `kind` and `tokens[]` with `mint`, `symbol`, `name`, `usdPrice`, `mcap`, `liquidity`, `holders`, `change5m`, `change1h`, `bondingProgress`, `riskLevel`.
+
+### `get_price_history`
+
+OHLCV candles for a token from its top pool.
+
+| Input | Type | Default |
+|---|---|---|
+| `mint` | mint | |
+| `timeframe` | `1m` \| `5m` \| `15m` \| `1h` \| `4h` \| `1d` | `15m` |
+| `limit` | integer 1–1000 | `100` |
+
+Output: `mint`, `pool` (`id`, `name`, or `null`), `candles[]` with `time` (unix seconds), `open`, `high`, `low`, `close`, `volume`. A token without a pool returns an empty list and a `reason`.
+
+## Trading
+
+### `get_quote`
+
+Best route across Metis, JupiterZ, DFlow and OKX. Works without a wallet.
+
+| Input | Type | Notes |
+|---|---|---|
+| `inputMint` | mint | token to sell |
+| `outputMint` | mint | token to buy |
+| `amount` | number > 0 | UI units of the input token |
+| `slippageBps` | integer 1–5000, optional | fixed slippage; omit for Jupiter's auto slippage |
+
+Output:
+
+| Field | Meaning |
+|---|---|
+| `inputMint`, `inputSymbol`, `outputMint`, `outputSymbol` | the pair |
+| `inAmount`, `inAmountRaw` | input in UI units and raw units |
+| `outAmount`, `price` | expected output and output-per-input |
+| `priceImpactPct` | absolute price impact in percent |
+| `slippageBps` | slippage the route was built with |
+| `feeBps` | platform fee bps actually on the order (`0` when the fee is not configured) |
+| `scheduledFeeBps`, `feeTier`, `feeLabel` | the tier the fee schedule chose (`standard`, `size`, `staker`); `feeTier` / `feeLabel` are `null` when the fee is off |
+| `inputUsd` | USD value of the input at quote time, when a price is known |
+| `router` | the router that won the meta-aggregation |
+| `requestId`, `expiresAt` | Jupiter order id and expiry |
+| `direct` | the best Raydium CPMM pool for the pair, net of the same fee (`poolId`, `outAmount`, `priceImpactPct`, `poolTradeFeeBps`, `savedVsAggregatorPct`, `tvlUsd`), or `null`. See [Direct DEX routing](/routing/direct-dex-roadmap/) |
+
+Errors: `No route for this pair right now`, `Amount too small for this route`, `Potswap is busy; retry in a few seconds`. All end with `No funds were debited.`
+
+### `swap`
+
+Executes at the best route, signing with the agent wallet. Requires `confirm: true`; otherwise it returns the quote only. Protected by `POTSWAP_MAX_TRADE_SOL`, `POTSWAP_MAX_SLIPPAGE_BPS`, `POTSWAP_ALLOWED_TOKENS` and the 0.01 SOL reserve.
+
+| Input | Type | Notes |
+|---|---|---|
+| `inputMint`, `outputMint`, `amount`, `slippageBps` | as `get_quote` | |
+| `confirm` | boolean | default `false`; must be `true` to sign |
+| `maxSlippageBps` | integer 1–5000, optional | alias used when `slippageBps` is omitted |
+| `route` | `jupiter` \\| `direct` \\| `auto` | default `jupiter`; `direct` builds a Raydium CPMM swap locally (same fee); `auto` takes the better net output |
+| `opId` | string 4–64, optional | idempotency key; a repeat returns the stored result (see [Idempotent operations](/security/limits-and-policies/#idempotent-operations)) |
+
+Outcomes:
+
+| Outcome | Returned |
+|---|---|
+| No wallet | error `Wallet not configured. Set SOLANA_PRIVATE_KEY or SOLANA_KEYPAIR_PATH, or run wallet_create. No funds were debited.` |
+| Token outside the allowlist | error `Token not in POTSWAP_ALLOWED_TOKENS. No funds were debited.` (checked before any quote) |
+| Refused by a limit | error `Refused by safety limit: … No funds were debited.` plus `quote` |
+| Refused by the validator | error `Refused by the transaction validator: … No funds were debited.` plus `quote` |
+| Repeated `opId` already done | success with `replayed: true` and the stored result; nothing is sent |
+| Repeated `opId` still in flight / unknown | error naming the signature to check; `Funds may have been debited.` |
+| `confirm` missing | `{ confirmRequired: true, quote }` |
+| `POTSWAP_DRY_RUN` set | `{ dryRun: true, quote }`, nothing signed |
+| Execution failed | error with the friendly message, plus `signature` and `explorerUrl` when a transaction was sent |
+| Success | `signature`, `explorerUrl`, `inAmount`, `inputSymbol`, `outAmount`, `outputSymbol`, `router`, `feeBps`, `feeUsd`, `pointsAdded`, `solEquivalent` |
+
+Execution path (aggregator): fresh order with the agent wallet as `taker` → validator → local signature → `POST /execute`. `pointsAdded` equals `feeUsd` when the Potswap fee is configured, else `0`. Direct route: pool read → local build → validator (strict) → sign → RPC send and confirm; `router` is `raydium-cpmm`.
+
+### `get_operation`
+
+| Input | Type | Default |
+|---|---|---|
+| `id` | string, optional | an `opId` passed to `swap` |
+| `limit` | integer 1–100 | `20` |
+
+With `id`: the record (`state`, `signature`, `result`, `error`, timestamps) or an error when unknown. Without: recent operations newest first.
+
+## Wallet and operations
+
+### `wallet_create`
+
+Generates a new keypair and stores it at `POTSWAP_STATE_DIR/wallet.json` (mode 0600). Only when no wallet is configured.
+
+| Input | Type | Notes |
+|---|---|---|
+| `confirm` | boolean | must be `true`; otherwise `Set confirm=true to create a wallet. Nothing was created.` |
+
+Output: `publicKey`, `file`, `backup` (a reminder that the file is the only copy of the secret). The secret key is never returned. With a wallet already configured the tool fails with `A wallet is already configured (<pubkey>). Nothing was created.`; an existing file is never overwritten. The server signs with the new wallet immediately and loads it on later starts.
+
+### `get_wallet`
+
+No input. Returns `publicKey` (or `null`), `fund` (funding instructions, or the no-wallet message), `limits` (`maxTradeSol`, `maxDailySol`, `maxSlippageBps`, `dryRun`), `allowedTokens[]`, `allowedRecipients[]`, `schedulerActive`, `stateDir`, `api`, `rpc` (API key redacted).
+
+### `transfer`
+
+Sends SOL or an SPL / Token-2022 token from the agent wallet. **No Potswap fee.** Built and signed locally; the recipient's token account is created when missing.
+
+| Input | Type | Notes |
+|---|---|---|
+| `to` | address (32–44 base58) | recipient wallet |
+| `mint` | mint, optional | omit for SOL |
+| `amount` | number > 0 | UI units |
+| `confirm` | boolean | must be `true` to send |
+
+Outcomes: no wallet → `Wallet not configured …`; recipient outside `POTSWAP_ALLOWED_RECIPIENTS` → `Recipient not in POTSWAP_ALLOWED_RECIPIENTS. No funds were debited.`; SOL-equivalent above `POTSWAP_MAX_TRADE_SOL` → `Refused by safety limit …`; SOL below the 0.01 reserve → `Insufficient SOL: balance …, keep at least 0.01 SOL for fees. No funds were debited.`; `confirm` missing → `{ confirmRequired: true }`; dry run → `{ dryRun: true }`; on-chain failure → `Transfer failed on-chain: … Check https://solscan.io/tx/<sig>`; success → `signature`, `explorerUrl`.
+
+### `get_transaction`
+
+| Input | Type | Notes |
+|---|---|---|
+| `signature` | string | transaction signature |
+| `wallet` | address, optional | whose balance changes to report; defaults to the agent wallet |
+
+Output: `status` (`processed` \| `confirmed` \| `finalized` \| `failed` \| `not found`), `slot`, `explorerUrl`, and for landed transactions `feeSol`, `error`, `solChange` and `tokenChanges[]` (`mint`, `change`) for the wallet. An unknown signature returns `not found` without an error.
+
+### `get_history` (wallet optional)
+
+| Input | Type | Default |
+|---|---|---|
+| `wallet` | address, optional | agent wallet |
+| `limit` | integer 1–100 | `25` |
+
+Output: `items[]` newest first, each with `signature`, `time`, `kind` (`swap` \| `transfer` \| `other`), `source`, `feeSol`, `failed`, and per kind: swaps carry `inMint`, `inAmount`, `outMint`, `outAmount`; transfers carry `direction` (`in` \| `out`), `counterparty`, `mint`, `amount`.
+
+### `get_balances` (wallet optional)
+
+SOL and SPL balances (Token and Token-2022 programs) with USD values.
+
+| Input | Type | Notes |
+|---|---|---|
+| `wallet` | address, optional | defaults to the agent wallet |
+
+Output: `wallet`, `totalUsd`, `balances[]` sorted by USD with `mint`, `amount`, `usd`. Fails with `Wallet not configured …` when neither `wallet` nor a key is available.
+
+### `get_positions` (wallet optional)
+
+Holdings with PnL from the wallet's swap history (average-cost method, up to the last 100 swaps).
+
+Input: `wallet` (optional). Output: `wallet`, `sol`, `solUsd`, `positions[]` with `mint`, `amount`, `avgCostUsd`, `costBasisUsd`, `valueUsd`, `unrealisedUsd`, `realisedUsd`. Fields are omitted when no price or no cost basis is known.
+
+### `stake_sol` / `unstake_sol`
+
+Liquid staking as a swap: SOL → jitoSOL (Jito) or mSOL (Marinade) at the best route, and back. Same fee, points, limits and allowlist as `swap`.
+
+| Input | Type | Default |
+|---|---|---|
+| `amount` | number > 0 | UI units of the input (SOL for staking, jitoSOL / mSOL for unstaking) |
+| `provider` | `jito` \| `marinade` | `jito` |
+| `confirm` | boolean | `false` |
+| `maxSlippageBps` | integer 1–5000, optional | |
+
+Outcomes as `swap`.
+
+## Rewards
+
+### `get_points` (wallet optional)
+
+Points and rewards for a wallet.
+
+Input: `wallet` (optional). Output: `{ enabled: true, … }` with points this epoch, all-time, POT allocated and claimable, next unlock, **`rewardBalanceSol`** (20% of the wallet's net fees, in SOL, to buy POT after launch), `claimsOpen`, **`level`** (`Larva` \| `Bee` \| `Queen`, `multiplier` up to 1.25, `nextAt`) and **`season`** (`n`, `dayIndex`, `start`, `end`); or `{ enabled: false, wallet, note }` while the points engine is not switched on.
+
+### `get_leaderboard`
+
+Top wallets by Potswap fee paid, with POT allocated. No input. Returns `{ enabled: false, note }` while the points engine is not switched on.
+
+### `get_launch_status`
+
+No input, no wallet needed. Returns the launch meter from `/api/launch-pool` (`enabled`, `address`, `balanceSol`, `targetSol`, `pct`, `remainingSol`, `reached`, `launch`, `season`, `splits`, `rules`) plus `unclaimedSol`, `claimLadder[]` (`minPriceUsd`, `maxPriceUsd`, `totalSol`, `claims`) and `potDistributedMicro` from `/api/stats`. See [Launch meter](/economy/launch-meter/).
+
+## Observations
+
+`observe_publish {kind, mint, value, unit?, source, ttlSec?, note?}` (wallet required), `observe_query {mint?, kind?, publisher?, limit?, includeStale?}`, `observe_verify {observation}`, `observe_consume {id}` (wallet required). Full description on [Observations](/agents/observations/).
+
+## Lending and liquidity
+
+`lend_markets`, `lend_positions {wallet?}`, `lend_deposit {mint, amount, confirm}`, `lend_withdraw {mint, amount? | all, confirm}` (Jupiter Lend Earn) and `lp_pools {mintA, mintB}`, `lp_position {poolId, wallet?}`, `lp_deposit {poolId, mint, amount, maxSlippageBps?, confirm}`, `lp_withdraw {poolId, lpAmount? | pct?, maxSlippageBps?, confirm}` (Raydium CPMM). Entries pay the Potswap fee, exits are free. Full description on [Lending and liquidity](/agents/defi/).
+
+## Strategies
+
+All `*_create` tools require a wallet and `confirm: true`; otherwise nothing is created and the error says so. At most `POTSWAP_MAX_STRATEGIES` (default 10) strategies may be active at once. Every created strategy includes `maxSlippageBps` (optional, 1–5000) applied to each of its legs, and every leg respects `POTSWAP_ALLOWED_TOKENS`. See [Strategies](/agents/strategies/) for the engine semantics.
+
+Create tools return `{ strategy, schedulerActive, runs }` with the strategy record, whether this process runs the scheduler, and up to 3 recent runs. The first DCA leg runs at creation when a scheduler is attached.
+
+### `dca_create`
+
+| Input | Type | Notes |
+|---|---|---|
+| `inputMint`, `outputMint` | mint | must differ |
+| `amountPerRun` | number > 0 | UI units of the input token per run |
+| `intervalMinutes` | integer 5 – 43,200 (30 days) | |
+| `totalRuns` | integer 1–1000, optional | omit for open-ended |
+| `maxSlippageBps` | integer 1–5000, optional | |
+| `confirm` | boolean | must be `true` |
+
+### `rebalance_create`
+
+| Input | Type | Notes |
+|---|---|---|
+| `targets` | `{ mint: percent }` | 2–6 assets, must include SOL, must sum to 100 (±0.5) |
+| `driftPct` | number 1–50 | default `5` |
+| `checkIntervalMinutes` | integer 15 – 10,080 (7 days) | default `60` |
+| `minTradeUsd` | number ≥ 1 | default `5`; smaller legs are skipped |
+| `maxSlippageBps` | integer 1–5000, optional | |
+| `confirm` | boolean | must be `true` |
+
+Keys are mints, not symbols.
+
+### `tpsl_create`
+
+| Input | Type | Notes |
+|---|---|---|
+| `mint` | mint | the position to protect |
+| `sellPct` | number 1–100 | default `100` |
+| `takeProfitPct` | number > 0, optional | sell when price ≥ entry × (1 + pct/100) |
+| `stopLossPct` | number 0–99, optional | sell when price ≤ entry × (1 − pct/100) |
+| `trailingPct` | number 0–99, optional | sell when price ≤ high-water × (1 − pct/100) |
+| `exitMint` | mint | default SOL; must differ from `mint` |
+| `maxSlippageBps` | integer 1–5000, optional | |
+| `confirm` | boolean | must be `true` |
+
+At least one of `takeProfitPct`, `stopLossPct`, `trailingPct` is required. The entry price is the price at creation; if no price is available the tool fails with `No price available for this token right now; try again in a moment. Nothing was created.`
+
+### `limit_order_create`
+
+A price-triggered swap that fills once, then completes. Runs through the strategy scheduler (needs this host open or the daemon).
+
+| Input | Type | Notes |
+|---|---|---|
+| `side` | `buy` \| `sell` | |
+| `mint` | mint | the token bought or sold |
+| `quoteMint` | mint | default SOL; must differ from `mint` |
+| `amount` | number > 0 | input amount in UI units: quote (SOL) amount for buys, token amount for sells |
+| `triggerPriceUsd` | number > 0 | |
+| `condition` | `above` \| `below` | fill when the token's USD price is at or past the trigger |
+| `expiresAt` | ISO datetime, optional | past this moment the order completes unfilled |
+| `priceSource` | `potswap` \| `observations` | default `potswap`; `observations` uses the median of fresh signed observations (see [Observations](/agents/observations/)) |
+| `minPublishers` | integer 1–50 | default `2`; distinct publishers required for an observation price |
+| `maxSlippageBps` | integer 1–5000, optional | |
+| `confirm` | boolean | must be `true` |
+
+Nothing executes at creation. Each scheduler tick checks the price; when the condition holds the leg runs once through the standard swap path (fee, points, caps) and the order becomes `completed`. A missing price never fills.
+
+### `strategy_list`
+
+No input. Returns `schedulerActive`, `stateFile` and `strategies[]`, each with its record plus `lastRun`. Works without a wallet.
+
+### `strategy_pause`, `strategy_resume`, `strategy_delete`
+
+| Input | Type |
+|---|---|
+| `id` | string, the strategy id |
+
+- `pause` sets `status: paused`, `pausedReason: "paused by user"`, clears `nextRunAt`.
+- `resume` re-activates, resets the failure counter and schedules the next run from now (price-triggered kinds simply resume checking). Completed strategies cannot be resumed; create a new one.
+- `delete` removes the strategy and keeps its run history.
+
+### `strategy_runs`
+
+| Input | Type | Default |
+|---|---|---|
+| `id` | string | |
+| `limit` | integer 1–200 | `20` |
+
+Returns `runs[]` newest first, each with `at`, `action`, `outcome` (`ok` \| `skipped` \| `failed` \| `dry-run` \| `no-op` \| `completed`), and when relevant `message`, `signature`, `inAmount`, `inputSymbol`, `outAmount`, `outputSymbol`, `feeUsd`, `pointsAdded`, `solEquivalent`.
+
+---
+
+# Strategies
+
+Source: https://docs.potswap.io/agents/strategies/
+
+> DCA, rebalance and take-profit / stop-loss as standing orders; who runs the clock, where state lives, and the caps that apply to every leg.
+
+Strategies are standing orders that keep running without you. Every leg is an ordinary Potswap swap through the same path as the `swap` tool (quote → limits → fresh order as taker → local signature → execute), so every leg pays the fee and earns POT points, and every leg is subject to the same safety limits.
+
+Four kinds exist in version 0.4.0:
+
+| Kind | Tool | What it does |
+|---|---|---|
+| DCA | `dca_create` | Buys a fixed amount of a token on a schedule. |
+| Rebalance | `rebalance_create` | Keeps the wallet at target percentages, routing through SOL. |
+| Take-profit / stop-loss | `tpsl_create` | Sells part of a position when its price crosses a level. |
+| Limit order | `limit_order_create` | Buys or sells once when the token's USD price crosses a level, then completes. |
+
+Tool inputs are listed in the [MCP tools reference](/agents/mcp-tools/#strategies).
+
+## DCA
+
+```json
+{
+  "tool": "dca_create",
+  "arguments": {
+    "inputMint": "So11111111111111111111111111111111111111112",
+    "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "amountPerRun": 0.1,
+    "intervalMinutes": 60,
+    "totalRuns": 24,
+    "confirm": true
+  }
+}
+```
+
+- The first leg runs at creation (when a scheduler is attached), then every `intervalMinutes`.
+- `nextRunAt` is always set from the time the leg actually ran, so a window missed during downtime runs once and never as a burst of catch-up legs.
+- When `totalRuns` is reached the strategy becomes `completed` and never runs again. Dry-run legs count toward `totalRuns`.
+
+## Rebalance
+
+```json
+{
+  "tool": "rebalance_create",
+  "arguments": {
+    "targets": {
+      "So11111111111111111111111111111111111111112": 60,
+      "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 40
+    },
+    "driftPct": 5,
+    "checkIntervalMinutes": 60,
+    "confirm": true
+  }
+}
+```
+
+On each check the engine reads balances and prices, computes current weights, and acts only when some asset is more than `driftPct` percentage points from its target:
+
+1. Sell overweight non-SOL assets to SOL.
+2. Buy underweight assets from SOL.
+
+Legs worth less than `minTradeUsd` (default $5) are skipped. Assets not listed in `targets` are never touched. When nothing drifts the check is logged as `no-op` and nothing is swapped.
+
+A target the engine cannot price is excluded from the weights (the remaining targets are re-normalised) and a run is logged with `No price for <mint>; it is excluded until one is available.`
+
+## Take-profit / stop-loss
+
+```json
+{
+  "tool": "tpsl_create",
+  "arguments": {
+    "mint": "<BONK mint>",
+    "sellPct": 50,
+    "takeProfitPct": 50,
+    "stopLossPct": 20,
+    "trailingPct": 15,
+    "confirm": true
+  }
+}
+```
+
+- The entry price is the price at creation. Price is checked on every scheduler tick (every 30 s) while a scheduler runs.
+- Triggers, evaluated in this order: take-profit at `entry × (1 + takeProfitPct/100)`; trailing stop at `highWater × (1 − trailingPct/100)`, armed only once the high-water mark is above entry; stop-loss at `entry × (1 − stopLossPct/100)`.
+- When a trigger fires the engine sells `sellPct` of the wallet's current balance of `mint` to `exitMint` (default SOL) once, then marks the strategy `completed`.
+- If the wallet holds none of the mint at trigger time the run is logged `Nothing to sell; completing.` and the strategy completes.
+- A missing price never triggers anything: the check is logged `price unavailable` and skipped.
+
+## Limit orders
+
+```json
+{
+  "tool": "limit_order_create",
+  "arguments": {
+    "side": "buy",
+    "mint": "<BONK mint>",
+    "amount": 0.1,
+    "triggerPriceUsd": 0.00001,
+    "condition": "below",
+    "expiresAt": "2026-12-31T00:00:00Z",
+    "confirm": true
+  }
+}
+```
+
+- `amount` is the input: the quote (SOL by default) amount for a buy, the token amount for a sell.
+- Nothing executes at creation. On each tick the engine reads the token's USD price; when `condition` holds (`below`: price ≤ trigger, `above`: price ≥ trigger) the leg runs once through the standard swap path and the order becomes `completed`. It never fills twice.
+- `expiresAt` in the past completes the order unfilled and logs `Expired unfilled.`
+- A missing price never fills. Potswap does not use Jupiter's trigger API (it needs a separate key); the scheduler is the trigger, so a process must be running for the order to fill.
+
+## Who runs the clock
+
+Strategies execute inside the MCP server process while your host app (Claude Desktop, Cursor, Claude Code) is open. For 24/7 operation run the daemon on any always-on machine:
+
+```bash
+POTSWAP_STATE_DIR=~/.potswap SOLANA_KEYPAIR_PATH=~/.config/solana/id.json npx -y @potswap_io/mcp --daemon
+```
+
+The daemon runs the scheduler without an MCP transport, logs every leg to stderr (redacted), and finishes the in-flight leg on `SIGINT` / `SIGTERM` before exiting.
+
+**One scheduler per state directory.** A PID lock file (`scheduler.lock`) in the state directory makes sure only one process trades. A second process pointed at the same directory still serves the strategy tools (it can list, create, pause, resume, delete) but does not run the scheduler; `strategy_list` reports `schedulerActive: false`, the create tools add a note, and `--daemon` exits with code 2 naming the owner PID. A lock whose PID is no longer alive is reclaimed automatically.
+
+## State file
+
+State lives in `~/.potswap/strategies.json`; override the directory with `POTSWAP_STATE_DIR`. Writes are atomic (temp file + rename) and the content is passed through secret redaction before it touches disk. The last 2,000 runs are kept.
+
+```json
+{
+  "version": 1,
+  "strategies": [
+    {
+      "id": "dca_m2x4k9abcd",
+      "kind": "dca",
+      "status": "active",
+      "createdAt": "2026-10-24T10:00:00.000Z",
+      "nextRunAt": "2026-10-24T11:00:00.000Z",
+      "consecutiveFailures": 0,
+      "totals": { "runs": 1, "volumeUsd": 18.2, "feeUsd": 0.45, "pointsAdded": 0.45 },
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amountPerRun": 0.1,
+      "intervalMinutes": 60,
+      "totalRuns": 24,
+      "runsDone": 1
+    }
+  ],
+  "runs": []
+}
+```
+
+Strategies survive restarts: an active strategy whose `nextRunAt` passed during downtime runs once on the next tick.
+
+## Caps and failure handling
+
+| Rule | Behaviour |
+|---|---|
+| `POTSWAP_MAX_TRADE_SOL` (default 1) | Applies per leg. A leg above it is skipped with `Refused by safety limit … No funds were debited.`; the strategy stays active. |
+| `POTSWAP_MAX_DAILY_SOL` (default 5) | SOL-equivalent all strategies together may spend per UTC day, counted from successful legs. Over the cap: `Daily cap reached (5 SOL). Next legs resume at 00:00 UTC. No funds were debited.` |
+| `POTSWAP_MAX_SLIPPAGE_BPS` (default 300) | Applies to each leg's `maxSlippageBps`. |
+| `POTSWAP_MAX_STRATEGIES` (default 10) | Maximum active strategies; create fails with `Limit of 10 active strategies reached. Pause or delete one first.` |
+| `POTSWAP_DRY_RUN=true` | Every leg becomes a logged quote (`dry-run` outcome); nothing is signed. |
+| 3 consecutive failures | The strategy pauses itself with `pausedReason: "3 consecutive failures; resume after checking the wallet and route."` Skipped legs (caps) do not count as failures. |
+| No wallet | Create tools fail with `Wallet not configured …`; `strategy_list` and `strategy_runs` still work. |
+
+Each run records `feeUsd` and `pointsAdded`, and the strategy's `totals` accumulate `runs`, `volumeUsd`, `feeUsd` and `pointsAdded`.
+
+## Out of scope in this version
+
+Server-side scheduling (Potswap never holds keys) and per-strategy webhooks are not built. See the [Roadmap](/resources/roadmap/).
+
+---
+
+# Configuration
+
+Source: https://docs.potswap.io/agents/configuration/
+
+> Every environment variable read by @potswap_io/mcp, with defaults and parsing rules.
+
+The server is configured entirely through environment variables, set in the `env` block of your MCP host config or in the shell that runs `--daemon`.
+
+## Wallet
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `SOLANA_PRIVATE_KEY` | — | Secret key as a base58 string (64 bytes, or a 32-byte seed) or a JSON array of 64 bytes, as exported by Phantom or `solana-keygen`. |
+| `SOLANA_KEYPAIR_PATH` | — | Path to a `solana-keygen` JSON file. Used only when `SOLANA_PRIVATE_KEY` is unset. |
+| *(file)* | `POTSWAP_STATE_DIR/wallet.json` | Created by `wallet_create` (mode 0600). Used only when both variables are unset. |
+
+With none of the three the server runs read-only. See [Key handling](/security/key-handling/).
+
+## Network
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `POTSWAP_API` | `https://www.potswap.io` | Base URL of the Potswap API (quotes, orders, token data, prices, points). A trailing slash is stripped. |
+| `SOLANA_RPC_URL` | `<POTSWAP_API>/api/rpc` | RPC used for balances. Set your own if you trade a lot. |
+
+## Safety limits
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `POTSWAP_MAX_TRADE_SOL` | `1` | Refuse any swap or strategy leg whose input is worth more than this many SOL (valued via price). |
+| `POTSWAP_MAX_SLIPPAGE_BPS` | `300` | Refuse a requested slippage above this (300 = 3%). |
+| `POTSWAP_MAX_DAILY_SOL` | `5` | SOL-equivalent all strategies together may spend per UTC day. |
+| `POTSWAP_MAX_STRATEGIES` | `10` | Maximum number of active strategies. |
+| `POTSWAP_DRY_RUN` | `false` | `1`, `true` or `yes` (case-insensitive): `swap`, `transfer`, the stake tools and strategy legs never sign; they return or log what would have happened. |
+| `POTSWAP_ALLOWED_TOKENS` | — (everything) | Comma-separated mints. When set, every swap, stake and strategy leg must have both mints on the list; refused with `Token not in POTSWAP_ALLOWED_TOKENS. No funds were debited.` before any quote. |
+| `POTSWAP_ALLOWED_RECIPIENTS` | — (everyone) | Comma-separated addresses. When set, `transfer` only sends to these. |
+
+Numeric variables must be positive finite numbers; anything else falls back to the default. The 0.01 SOL reserve is fixed and not configurable. See [Limits and policies](/security/limits-and-policies/).
+
+## Strategy state
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `POTSWAP_STATE_DIR` | `~/.potswap` | Directory holding `wallet.json` (if created), `strategies.json` and `scheduler.lock`. |
+
+See [Strategies](/agents/strategies/#state-file).
+
+## Example: conservative agent
+
+```json
+{
+  "mcpServers": {
+    "potswap": {
+      "command": "npx",
+      "args": ["-y", "@potswap_io/mcp"],
+      "env": {
+        "SOLANA_KEYPAIR_PATH": "/home/you/.config/solana/agent.json",
+        "POTSWAP_MAX_TRADE_SOL": "0.25",
+        "POTSWAP_MAX_SLIPPAGE_BPS": "100",
+        "POTSWAP_MAX_DAILY_SOL": "1",
+        "POTSWAP_ALLOWED_TOKENS": "So11111111111111111111111111111111111111112,EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "POTSWAP_DRY_RUN": "true"
+      }
+    }
+  }
+}
+```
+
+Remove `POTSWAP_DRY_RUN` once you have reviewed a few dry runs.
+
+## Example: daemon on an always-on machine
+
+```bash
+export SOLANA_KEYPAIR_PATH=~/.config/solana/agent.json
+export SOLANA_RPC_URL=https://your-rpc.example.com
+export POTSWAP_STATE_DIR=~/.potswap
+export POTSWAP_MAX_DAILY_SOL=2
+npx -y @potswap_io/mcp --daemon
+```
+
+The daemon logs its configuration on start: state file, `maxTradeSol`, `maxDailySol`, `DRY RUN` when set, and the wallet public key (or `no wallet (strategies cannot execute)`).
+
+## Where keys are used
+
+- `POTSWAP_API` is the only host the server talks to for quotes, orders and token data. Potswap's proxy adds its own Jupiter key server-side, so you need none.
+- `SOLANA_RPC_URL` is used for reading balances (`get_balances`, `get_positions`, limit checks, rebalance weights), for `get_transaction`, and for sending and confirming `transfer` transactions. Swaps are sent through Jupiter's execute endpoint via the Potswap proxy.
+
+---
+
+# SDK (@potswap_io/sdk)
+
+Source: https://docs.potswap.io/agents/sdk/
+
+> The engine behind the MCP server and the CLI as a typed Node library — quotes, swaps, transfers, wallet, history, PnL, strategies and the fee schedule — with the same limits and copy.
+
+`@potswap_io/sdk` is the core the MCP server is built on, published on its own so bots, scripts, plugins for other agent frameworks and CI jobs can use the same engine. Node 20+, ESM, TypeScript types included. No MCP or zod dependency.
+
+```bash
+npm i @potswap_io/sdk
+```
+
+```ts
+
+const config = loadConfig(process.env)
+const api = new PotswapApi(config.apiBase)
+const signer = loadSigner({ privateKey: config.privateKey, keypairPath: config.keypairPath, stateDir: config.stateDir })
+const balances = rpcBalances(config.rpcUrl)
+
+const quote = await buildQuote(api, { inputMint: SOL_MINT, outputMint: USDC_MINT, amount: 0.1 })
+const r = await executeSwap({ api, config, signer, balances }, { inputMint: SOL_MINT, outputMint: USDC_MINT, amount: 0.1, confirm: true })
+```
+
+`executeSwap` returns a tagged union: `no-wallet`, `refused` (a limit or allowlist, with the `quote`), `quote-only` (no `confirm`), `dry-run`, `failed` (with `signature` when one exists) or `ok` (`signature`, `explorerUrl`, amounts, `router`, `feeBps`, `feeUsd`, `pointsAdded`, `solEquivalent`). Every message states whether funds were debited.
+
+## Configuration
+
+`loadConfig(env)` reads the same variables as the MCP server: `SOLANA_PRIVATE_KEY`, `SOLANA_KEYPAIR_PATH`, `SOLANA_RPC_URL`, `POTSWAP_API`, `POTSWAP_MAX_TRADE_SOL`, `POTSWAP_MAX_SLIPPAGE_BPS`, `POTSWAP_MAX_DAILY_SOL`, `POTSWAP_DRY_RUN`, `POTSWAP_ALLOWED_TOKENS`, `POTSWAP_ALLOWED_RECIPIENTS`, `POTSWAP_STATE_DIR`. See [Configuration](/agents/configuration/). You can also build a `Config` object yourself.
+
+## Modules
+
+| Export | Purpose |
+|---|---|
+| `PotswapApi`, `ApiError` | `/api/config`, token search, prices, order, execute, points, leaderboard, launch pool, stats, history, OHLCV; one retry on 429 / 503 |
+| `buildQuote`, `executeSwap` | the swap path used by `swap`, `stake_sol`, every strategy leg and the CLI |
+| `executeTransfer`, `rpcFromConnection`, `Rpc` | SOL / SPL / Token-2022 transfers; recipient allowlist, caps, reserve; no fee |
+| `checkLimits` | pure limit checks (per-trade SOL-equivalent, slippage, reserve, balance) |
+| `loadSigner`, `createWallet`, `Signer` | signer from env / file / `<stateDir>/wallet.json`; wallet creation (0600) |
+| `normalizeHistory`, `mapSignatureStatus`, `computePositions` | history normalisation and average-cost PnL (pure) |
+| `Scheduler`, `FileStore`, `MemoryStore`, `acquireLock`, `isDue`, `nextRunAfter`, `rebalancePlan`, `tpslDecision`, `limitDecision`, … | the strategies engine; `Strategy`, `Run`, `StrategyState` types |
+| `createRuntime` | config → signer, API, balances, file store, PID lock, scheduler |
+| `feeBpsFor`, `parseFeeSchedule`, `DEFAULT_FEE_SCHEDULE` | the fee schedule shared with the web app |
+| `riskBadges`, `riskLevel` | the same risk flags the web app shows |
+| `friendlyError`, `describeOrderError` | user-facing error copy (always says whether funds were debited) |
+| `redact`, `redactValue`, `registerSecret`, `log` | secret redaction; `loadSigner` registers every encoding of the secret |
+| `SOL_MINT`, `USDC_MINT`, `JITOSOL_MINT`, `MSOL_MINT`, `NO_WALLET`, `TOKEN_NOT_ALLOWED`, `RECIPIENT_NOT_ALLOWED` | constants and canonical messages |
+
+## Testing against it
+
+The SDK talks to Potswap through `fetch`; pass your own `fetchFn` to `new PotswapApi(base, fetchFn)` to mock quotes and orders, inject a `balances` function and an `Rpc` object for transfers, and use `MemoryStore` for strategies. This is how the MCP and CLI test suites work.
+
+## Fees
+
+Swaps, stakes and strategy legs carry the Potswap fee inside the trade (see [Fees](/routing/fees/)); the SDK sets the referral account and the scheduled fee from `/api/config` unless you override `feeBps`. Transfers and all reads are free.
+
+---
+
+# CLI (potswap)
+
+Source: https://docs.potswap.io/agents/cli/
+
+> The potswap command line — quotes, swaps, staking, transfers, wallet, points, launch meter and strategy management with the same limits as the MCP server.
+
+`@potswap_io/cli` installs the `potswap` command. It runs on `@potswap_io/sdk`, so it reads the same environment variables, applies the same limits and pays the same fee as the MCP server. Node 20+.
+
+```bash
+npx -y @potswap_io/cli quote SOL USDC 0.1
+npm i -g @potswap_io/cli && potswap --help
+```
+
+## Commands
+
+| Command | Does |
+|---|---|
+| `quote <in> <out> <amount> [--slippage <bps>]` | Best route, output, fee tier, price impact. No wallet needed. |
+| `swap <in> <out> <amount> [--slippage <bps>] --confirm` | Executes at the best route (2.5% fee, earns POT). Without `--confirm` it prints the quote and `Add --confirm to execute`, exit 0. |
+| `stake <amount> [--provider jito\|marinade] --confirm` / `unstake …` | SOL ↔ jitoSOL / mSOL through the swap path. |
+| `balances [wallet]`, `positions [wallet]` | Holdings with USD. |
+| `wallet create` / `wallet show` | Creates `POTSWAP_STATE_DIR/wallet.json` (0600) when no wallet is configured, printing only the public key; `show` prints the key, limits and allowlists. |
+| `transfer <to> <amount> [--mint <mint>] --confirm` | SOL or token transfer, no fee; honours `POTSWAP_ALLOWED_RECIPIENTS`, the per-trade cap and the 0.01 SOL reserve. |
+| `points [wallet]` | Points this epoch and all-time, reward balance, level, season. Says when the points engine is not enabled yet. |
+| `launch` | Launch-pool meter, season and day, fee split. |
+| `strategies list \| runs <id> \| pause <id> \| resume <id> \| delete <id>` | Manage the strategies in the shared state file (created with the MCP tools). |
+| `daemon` | Runs the strategy scheduler until Ctrl-C; one per state directory (PID lock). |
+
+Tokens: a mint address or `SOL`, `USDC`, `USDT`, `JITOSOL`, `MSOL`; other symbols are resolved through token search (verified match first). Amounts are UI units (`1` = 1 SOL). `--json` prints machine-readable output for every command.
+
+## Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | success, including a quote-only `swap` / `transfer` without `--confirm` and a dry run |
+| `1` | refused by a limit or allowlist, no wallet, unknown token, or an execution failure; the message says whether funds were debited |
+| `2` | usage error (unknown command, missing argument, bad flag); usage is printed |
+
+## Examples
+
+```bash
+# read-only
+potswap quote SOL Bonk 0.25 --json
+potswap launch
+potswap points 5FX791oPE8Ey89JnCJ9Qxew5zyVukeyg6igVqNg4zhqx
+
+# a dedicated wallet for a bot
+export POTSWAP_STATE_DIR=~/.potswap-bot
+potswap wallet create            # fund the printed address
+POTSWAP_DRY_RUN=true potswap swap SOL USDC 0.1 --confirm   # rehearse
+potswap swap SOL USDC 0.1 --confirm
+
+# keep strategies running on a server
+POTSWAP_MAX_DAILY_SOL=2 potswap daemon
+```
+
+See [Configuration](/agents/configuration/) for every variable and [Limits and policies](/security/limits-and-policies/) for how the caps are enforced.
+
+---
+
+# Observations
+
+Source: https://docs.potswap.io/agents/observations/
+
+> Signed, slot-anchored market observations any agent can publish, query and verify through the open Potswap index — and use as the price source of a limit order.
+
+An **observation** is a small signed statement: *"at slot S I observed that token M had price / liquidity / holders / volume / risk / route quality V, from source X, valid for T seconds."* The publisher signs it with its wallet key; anyone can verify the signature and the schema without trusting Potswap or the publisher. Potswap runs an open index so agents can read what other agents observed and strategies can act on a shared picture instead of one API. Publishing, querying and verifying are free.
+
+## Schema (v1)
+
+```json
+{
+  "v": 1,
+  "kind": "price",
+  "mint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  "value": 0.00001234,
+  "unit": "usd",
+  "source": "jupiter-price-v3",
+  "slot": 312345678,
+  "observedAt": 1793000000000,
+  "ttlSec": 300,
+  "publisher": "<base58 pubkey>",
+  "note": "optional, ≤ 280 chars",
+  "id": "<sha256(canonical)[0..32]>",
+  "sig": "<base58 Ed25519 signature over the canonical bytes>"
+}
+```
+
+| Field | Rule |
+|---|---|
+| `kind` / `unit` | `price` (usd), `liquidity` (usd), `volume24h` (usd), `holders` (count), `risk` (level), `route` (bps) |
+| `slot` | the Solana slot the observation is anchored to (positive integer) |
+| `observedAt` | unix ms; the index rejects clocks more than 10 minutes off |
+| `ttlSec` | 10 – 86 400; after `observedAt + ttlSec` the observation is stale and excluded from aggregates |
+| `id` | first 32 hex chars of sha256 over the **canonical** body: JSON with sorted keys, no whitespace, no undefined, without `id` and `sig` |
+| `sig` | Ed25519 by `publisher` over the canonical bytes |
+
+Everything the schema needs is in the SDK: `signObservation(signer, …)`, `verifyObservation(obs)`, `canonical`, `observationId`, `aggregate`.
+
+## The index
+
+| Endpoint | Does |
+|---|---|
+| `POST /api/observations` | Verifies schema, id and signature, enforces 120 observations per publisher per hour, stores once (201; 200 with `duplicate: true` on a repeat). 400 on schema / id errors, 401 on a bad signature, 429 over the limit. |
+| `GET /api/observations?mint&kind&publisher&limit&fresh` | Fresh observations, newest first (cached 15 s). With `mint` and `kind` the response adds an `aggregate`: `count`, distinct `publishers`, `median` of each publisher's latest value, `min`, `max`, `spreadPct`, `latestAt`. `fresh=0` includes expired ones. |
+| `POST /api/observations/consume` | A signed receipt from a **consumer** that it used an observation: `{ wallet, message, signature }` with `message = {"wallet","ts","action":"consume","observationId"}`. One receipt per (observation, consumer); publishers cannot consume their own. |
+| `GET /api/observations/stats` | Totals: observations, publishers, consumptions, consumers, by kind. |
+
+Receipts matter for rewards: from Season 2, 20% of the season's POT budget goes to publishers weighted by **verified consumption**, that is distinct consumers of their observations (PRD P12.8). Self-consumption counts for nothing.
+
+## MCP tools
+
+| Tool | Does |
+|---|---|
+| `observe_publish {kind, mint, value, unit?, source, ttlSec?, note?}` | Signs with the agent wallet, anchors to the current slot, posts. Needs a wallet; no funds move. |
+| `observe_query {mint?, kind?, publisher?, limit?, includeStale?}` | Lists observations; with `mint` + `kind` returns the aggregate. No wallet needed. |
+| `observe_verify {observation}` | Local verification: schema, id, signature, freshness; for prices the deviation from the current Potswap price. |
+| `observe_consume {id}` | Signs and posts a consumption receipt. Needs a wallet. |
+
+## Strategies driven by observations
+
+`limit_order_create` accepts `priceSource: "observations"` and `minPublishers` (default 2). The scheduler then takes the **median of fresh price observations** from at least that many distinct publishers as the trigger price instead of Potswap's price API, and waits while fewer publishers have reported. Everything else (fee, caps, single fill) is unchanged. See [Strategies](/agents/strategies/#limit-orders).
+
+## Running a data bot
+
+The CLI ships a reference publisher that reads Potswap's own data and signs it with your wallet:
+
+```bash
+potswap observe DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263 So11111111111111111111111111111111111111112 --kinds price,liquidity,holders --interval 60
+potswap observations DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263 --kind price
+```
+
+Any process can publish with the SDK: build the body, `signObservation`, `api.publishObservation`. Your own sources (a DEX pool read, an RPC query, a model's risk score) are what make the network useful; `source` tells consumers where a value came from.
+
+## What verification does and does not prove
+
+Mechanical verification proves **who** said **what**, **when** (slot and time) and that it has not been altered. It does not prove the value was true. Consumers should aggregate across publishers (`aggregate` gives the per-publisher median and spread), prefer sources they recognise, and check `observe_verify`'s deviation against the live price for price observations. Reputation beyond consumption counts, on-chain anchoring of observation hashes and dispute handling are later versions.
+
+---
+
+# Lending and liquidity
+
+Source: https://docs.potswap.io/agents/defi/
+
+> Put idle balances to work through the same engine — Jupiter Lend Earn deposits and Raydium CPMM liquidity — with the same limits, validator and fee as swaps.
+
+Since `@potswap_io/mcp` 0.8.0 (`@potswap_io/sdk` 0.4.0, `@potswap_io/cli` 0.4.0) an agent can lend and provide liquidity without leaving the toolkit. One protocol each, chosen for simplicity and auditability; both run through the non-custodial path: build or fetch the transaction → [validator](/security/limits-and-policies/#the-transaction-validator) → local signature → your RPC.
+
+## Lending: Jupiter Lend Earn
+
+| Tool | Does |
+|---|---|
+| `lend_markets` | Earn markets (USDC, USDT, SOL, JupUSD, EURC, USDS, …) with `supplyApyPct`, `rewardsApyPct`, `totalAssets`, `assetMint`, `shareToken`. No wallet. |
+| `lend_positions {wallet?}` | Your positions: `shares`, `underlying`, `underlyingUsd`. |
+| `lend_deposit {mint, amount, confirm}` | Deposits into the market for `mint`. Without `confirm` it returns the plan (APY, fee). With it: Jupiter builds the transaction (through Potswap's proxy), the validator checks it (Jupiter Lend program allow-listed; lookup tables allowed since Jupiter is a trusted builder), the wallet signs, your RPC sends and confirms. |
+| `lend_withdraw {mint, amount? \| all, confirm}` | Withdraws an amount or the whole position. **Free.** |
+
+Deposits count against `POTSWAP_MAX_TRADE_SOL` and `POTSWAP_ALLOWED_TOKENS`.
+
+**The fee on deposits.** Entries pay the scheduled Potswap fee (2.5%, 1% at or above $1,000) on the deposited token, like a swap. Because the deposit transaction is pre-built by Jupiter, the fee is a **separate transfer sent after the deposit confirms**. If that transfer fails the deposit stands and the result says `feeCollected: false` with the reason; no points accrue for it. Until Potswap publishes `feeWallet` in `/api/config`, no fee is charged on lending (and no points), and the plan says so.
+
+```json
+{ "tool": "lend_deposit", "arguments": { "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "amount": 25, "confirm": true } }
+```
+
+Result: `signature`, `explorerUrl`, `market`, `supplyApyPct`, `feeBps`, `fee`, `feeSignature`, `feeCollected`, `feeNote`, `pointsAdded`.
+
+## Liquidity: Raydium CPMM
+
+Built on the [direct routing](/routing/direct-dex-roadmap/) adapter, so pool state is read from chain and the transaction is built locally.
+
+| Tool | Does |
+|---|---|
+| `lp_pools {mintA, mintB}` | CPMM pools for the pair with live reserves (net of protocol and fund fees), LP supply, trade fee, TVL, `swapEnabled`. |
+| `lp_position {poolId, wallet?}` | LP balance, share of the pool and the two token amounts it represents at current reserves. |
+| `lp_deposit {poolId, mint, amount, maxSlippageBps?, confirm}` | `amount` of `mint` (one side); the other side and the LP amount follow the reserves: `lp = floor(amount × lpSupply / reserve)`, `other = ceil(lp × otherReserve / lpSupply)`. The Potswap fee comes off the given side **in the same transaction** (wrap SOL → fee transfer → LP account → `deposit(lp, max0, max1)` → unwrap). `maximum_token_*` = amounts × (1 + slippage), default 50 bps. |
+| `lp_withdraw {poolId, lpAmount? \| pct?, maxSlippageBps?, confirm}` | Burns LP tokens for both sides with `minimum_token_*` = share × (1 − slippage). **Free.** |
+
+The plan returned without `confirm` shows both token amounts, the LP tokens and the fee, so an agent can check the other side's balance before committing; the tool refuses with a plain message when that balance is short.
+
+```json
+{ "tool": "lp_deposit", "arguments": { "poolId": "47hq28mcL7q5GhBg7epyGF2dnuJd4MKFt8QhT7CzYUp4", "mint": "So11111111111111111111111111111111111111112", "amount": 0.05, "confirm": true } }
+```
+
+## CLI
+
+```bash
+potswap lend markets
+potswap lend deposit USDC 25 --confirm
+potswap lend withdraw USDC all --confirm
+potswap lp pools SOL USDC
+potswap lp deposit <poolId> SOL 0.05 --confirm
+potswap lp withdraw <poolId> 50% --confirm
+```
+
+## What is not here
+
+Borrowing, leverage, other lending markets, concentrated liquidity (Raydium CLMM, Orca Whirlpools, Meteora DLMM), auto-compounding and scheduler-driven LP strategies are not built. Every refusal and failure says whether funds were debited.
+
+---
+
+# How routing works
+
+Source: https://docs.potswap.io/routing/how-routing-works/
+
+> Potswap quotes every order through Jupiter Swap V2 meta-aggregation, where Metis, JupiterZ, DFlow and OKX compete and the best net route wins.
+
+Potswap does not run its own router today. Every quote and swap goes through **Jupiter Swap V2**, Jupiter's meta-aggregation layer, via Potswap's hosted proxy (`POTSWAP_API/api/jup/*`). The proxy adds Potswap's Jupiter API key server-side so you never need one, and injects nothing else into the route.
+
+## The routers that compete
+
+On each order, Jupiter Swap V2 asks several routers for a route and returns the best one:
+
+| Router | What it is |
+|---|---|
+| **Metis** | Jupiter's own on-chain aggregation across Solana AMMs and order books. |
+| **JupiterZ** | Jupiter's RFQ (request-for-quote) system, where market makers quote directly; off-chain pricing, MEV-protected fills. |
+| **DFlow** | A third-party router integrated into Swap V2. |
+| **OKX** | OKX's DEX aggregator, integrated into Swap V2. |
+
+The response names the winner in `router`, and both `get_quote` and `swap` return it so your agent can log which router filled the order.
+
+## What "best route" means
+
+Jupiter ranks candidate routes by the output amount the taker receives for the given input, after the platform fee is applied to the order. Potswap passes its fee (`referralAccount` + `referralFee`) on the order request, so the `outAmount` you see is net of the Potswap fee and of the route's own costs. There is no separate comparison step on the Potswap side in this version; the router that returns the most output wins.
+
+What you can rely on:
+
+- `outAmount` is what you receive if the transaction lands within slippage.
+- `priceImpactPct` is the route's own impact estimate.
+- `slippageBps` is the slippage the route was built with; omit `slippageBps` on the request to let Jupiter choose automatically, or set it (up to `POTSWAP_MAX_SLIPPAGE_BPS`).
+- `expiresAt` is the order's expiry; `swap` always fetches a fresh order right before signing, so the quote you inspected is never the one that executes unchanged.
+
+## The swap path
+
+1. **Quote** — `GET /api/jup/swap/v2/order` with `inputMint`, `outputMint`, raw `amount`, optional `slippageBps`, and Potswap's `referralAccount` / `referralFee` for the tier the [fee schedule](/routing/fees/) selected.
+2. **Limits** — `POTSWAP_MAX_TRADE_SOL`, `POTSWAP_MAX_SLIPPAGE_BPS`, balance and the 0.01 SOL reserve are checked. A refusal happens here, before anything is signed.
+3. **Fresh order as taker** — the order is fetched again with the agent wallet as `taker`, which returns a serialized `VersionedTransaction`.
+4. **Local signature** — the transaction is signed in-process with your keypair.
+5. **Execute** — `POST /api/jup/swap/v2/execute` with the signed transaction and `requestId`. Jupiter lands it and reports the result.
+
+Every step that fails returns a message stating whether funds were debited.
+
+## Rate limits
+
+Potswap's proxy uses Jupiter's free tier (one request per second, shared). The server retries a `429` or `503` once after 1.1 s, then returns `Potswap is busy; retry in a few seconds. No funds were debited.` Token lists from `get_trending` are edge-cached for 15 s.
+
+## What is not here yet
+
+Direct DEX adapters (Raydium, Orca, Meteora) as a fallback or comparison to Jupiter, a net-of-fee "saved vs X" comparison, and simulate-before-sign are specified but not built. See [Direct DEX routing (roadmap)](/routing/direct-dex-roadmap/).
+
+---
+
+# Fees
+
+Source: https://docs.potswap.io/routing/fees/
+
+> The Potswap fee schedule — 2.5% standard, 1% at or above $1,000, a staker discount later — how it is charged inside the swap, and how it becomes POT points.
+
+Potswap charges an integrator fee inside each swap through Jupiter's referral program. The fee is deducted from the order on-chain; there is no separate payment. Observations and all read-only tools are free.
+
+## The schedule
+
+One pure function, shared by the web app and the MCP server, picks the fee for each order from a schedule served by `GET /api/config`:
+
+| Tier | Condition | Fee | `feeLabel` |
+|---|---|---|---|
+| Standard | input value below $1,000 | 250 bps (2.5%) | `2.5%` |
+| Size | input value at or above $1,000 | 100 bps (1%) | `1% (size tier)` |
+| Staker | wallet stakes at least `stakerMinPot` POT | −100 bps on the tier above, never below 50 bps | `1.5% (staker)` or `0.5% (staker)` |
+
+The input value is the USD value of the input amount at quote time. When no price is known the standard tier applies. Jupiter allows referral fees between 50 and 255 bps, so every result is clamped to that range.
+
+**Staker tier status:** the discount exists in code but is disabled until the POT token launches. `stakerMinPot` is `null` until then, so no discount is applied today. See [Points and POT](/economy/points-and-pot/).
+
+### Defaults
+
+```ts
+{
+  standardBps: 250,
+  sizeBps: 100,
+  sizeThresholdUsd: 1000,
+  stakerDiscountBps: 100,
+  stakerMinPot: null
+}
+```
+
+The MCP server reads the live schedule from `/api/config` (cached 5 minutes) and falls back to these defaults field by field.
+
+## Where the fee goes
+
+Of every fee collected, **Jupiter keeps 20%**. What remains is Potswap's net fee.
+
+| Net fee | Season 0 (pre-launch) | Seasons 1+ |
+|---|---|---|
+| Launch pool (future LP SOL) | 60% | — |
+| User reward balances | 20% | 20% |
+| Buy-and-burn POT | — | 30% |
+| Team & operations | 20% | 50% |
+
+`GET /api/config` returns the split in force as `splits` (and `burnShare`), switching from the Season 0 row to the Seasons 1+ row at the launch date. The split governs how the referral accounts are swept by the daily treasury job; until the launch-pool address is published no fees are swept.
+
+## Fee is off until configured
+
+The fee is only added when Potswap's referral account is configured on the server. When it is not, orders carry no `referralAccount`, `get_quote` returns `feeBps: 0` with `feeTier: null`, and `swap` returns `pointsAdded: 0`. The quote still shows `scheduledFeeBps` (what the tier *would* be) so clients can display the schedule consistently.
+
+## Points equal fee paid
+
+The fee basis you pay, in USD at swap time, is credited to the trading wallet as POT points. A discounted swap earns proportionally fewer points. `swap` and every strategy leg return `feeUsd` and `pointsAdded`; `pointsAdded === feeUsd` whenever the fee is configured. Details, including the daily split and the 10% cap, are on [Points and POT](/economy/points-and-pot/).
+
+## Third-party clients
+
+A client that sends Potswap's referral account with a lower `referralFee` simply pays less and earns fewer points. Nothing else is enforced.
+
+---
+
+# Direct DEX routing
+
+Source: https://docs.potswap.io/routing/direct-dex-roadmap/
+
+> The Raydium CPMM direct route next to the aggregator — how it is quoted, how the same fee is charged, how the transaction is built and validated locally — and the adapters still to come.
+
+Potswap quotes every order through Jupiter Swap V2 meta-aggregation. Since `@potswap_io/mcp` 0.7.0 (`@potswap_io/sdk` 0.3.0) it also quotes and executes **directly against a Raydium CPMM pool** when one exists for the pair. The direct route is the fallback proof: Potswap keeps working, and stays honest about price, even if the aggregator is down or wrong.
+
+## What you see in `get_quote`
+
+```json
+"direct": {
+  "poolId": "47hq28mcL7q5GhBg7epyGF2dnuJd4MKFt8QhT7CzYUp4",
+  "router": "raydium-cpmm",
+  "outAmount": 0.98,
+  "priceImpactPct": 1.02,
+  "poolTradeFeeBps": 30,
+  "savedVsAggregatorPct": -5.3,
+  "tvlUsd": 580
+}
+```
+
+`direct` is `null` when no CPMM pool exists for the pair, when the pool is paused or empty, or when pool data could not be read. The comparison is **net of the same Potswap fee**: the direct quote deducts the scheduled fee from the input before the pool math, exactly as the aggregator route carries it inside the order. A negative `savedVsAggregatorPct` means the aggregator is better, which is the usual case for liquid pairs.
+
+## How the direct route works
+
+1. **Discovery**: `GET /api/raydium/pools?mint1&mint2` (Raydium's public API behind Potswap's edge cache, 60 s) lists CP-Swap pools for the pair; up to three, by TVL, are read.
+2. **Pool state**: the SDK reads `PoolState`, `AmmConfig` and both vault accounts through your RPC, nets protocol and fund fees out of the vaults, checks the pool is open and swaps are enabled.
+3. **Quote**: constant product with the pool's `tradeFeeRate` (fee on input, ceiling rounding on the new output reserve, matching the program).
+4. **Transaction** (`swap { route: "direct" }`): built on your machine as one v0 transaction: compute budget → (wrap SOL into the wallet's wSOL account) → **Potswap fee** as a token transfer of the scheduled bps to the published fee wallet → create the output account → `swap_base_input(amount_in − fee, minimum_out)` → (unwrap). `minimum_out` applies your `slippageBps` (default 50).
+5. **Validator, sign, send**: the [instruction validator](/security/limits-and-policies/#the-transaction-validator) runs in strict mode (no lookup-table programs allowed); then the wallet signs, the SDK sends through your RPC and confirms. Outcomes follow the same shape as aggregator swaps and every message says whether funds were debited.
+
+`route: "auto"` executes whichever of the two has the higher net output. The default stays `jupiter`.
+
+## Fee parity
+
+The direct route pays the same scheduled fee (2.5%, 1% at or above $1,000, staker tier) as a transfer of the input token to Potswap's **fee wallet**, published as `feeWallet` in `GET /api/config`. Until that address is published, direct quotes still appear but direct execution is refused with `Direct route is not enabled yet: Potswap has not published its fee wallet. The aggregator route works as usual. No funds were debited.` Points for direct swaps start once the fee wallet's token accounts are added to the points indexer; the docs will say so when it happens.
+
+## Limits of this version
+
+- One adapter: Raydium CP-Swap (constant product). Raydium AMM v4 / CLMM, Orca Whirlpools and Meteora DLMM are **not** built; they follow after the SDK reaches 1.0.
+- No simulate-before-sign and no "saved vs X" history yet.
+- The pool read is three RPC calls; agents on the shared Potswap RPC should not quote direct in tight loops.
+
+## Roadmap
+
+- Orca Whirlpools and Meteora DLMM adapters, then AMM v4 / CLMM.
+- Simulate before sign; aggregator-vs-direct comparison history.
+- Enforced mode (session keys / smart wallet) so caps hold on-chain, not only in software.
+
+---
+
+# Non-custodial by design
+
+Source: https://docs.potswap.io/security/non-custodial/
+
+> Potswap never holds your keys or funds. The MCP server signs locally with your keypair, and Potswap's hosted services are read-only conveniences.
+
+Potswap is infrastructure, not a custodian. Nothing in the system takes possession of your funds or your keys.
+
+## What runs where
+
+| Component | Where it runs | What it can do |
+|---|---|---|
+| `@potswap_io/mcp` | your machine (the MCP host's process, or `--daemon`) | loads your keypair, builds and signs transactions, enforces limits, stores strategies |
+| Potswap API (`www.potswap.io`) | Cloudflare edge | proxies Jupiter quote / order / execute and an RPC with Potswap's own keys; serves token lists, the fee schedule and points data |
+| Jupiter | Jupiter's infrastructure | builds the route and lands the signed transaction |
+| Solana | the chain | executes the swap from your wallet |
+
+The Potswap API never receives your secret key. It receives the order parameters, your **public** wallet address as `taker`, and the **already signed** transaction. It cannot alter a signed transaction, and it cannot sign one for you.
+
+## Funds never leave your wallet unsigned
+
+- `swap` and every strategy leg sign in-process with your keypair and submit through Jupiter's execute endpoint. If you do not sign, nothing moves.
+- `swap` requires `confirm: true`. Without it, the tool returns the quote and `confirmRequired: true`.
+- `POTSWAP_DRY_RUN=true` makes every signing path return what it would have done, signing nothing.
+- Strategies run only in a process **you** start — your MCP host or the daemon. Potswap operates no server-side scheduler and cannot run a strategy on your behalf.
+
+## Recommended setup
+
+1. **Dedicated agent wallet.** Create a fresh keypair for the agent and fund it with only what the agent should control. Never give an agent your main wallet.
+2. **Caps low until trusted.** Start with `POTSWAP_MAX_TRADE_SOL=0.25` or lower and `POTSWAP_DRY_RUN=true`; raise caps as the agent's behaviour proves out. See [Limits and policies](/security/limits-and-policies/).
+3. **Own RPC for volume.** `SOLANA_RPC_URL` lets you bypass Potswap's shared RPC proxy for balance reads.
+4. **Read the state file.** `~/.potswap/strategies.json` is plain JSON; audit what the agent set up with `strategy_list` and `strategy_runs`.
+
+## What Potswap can see
+
+The hosted API sees the public wallet address, the pair and amount of each order, and the resulting signature (which is public on-chain anyway). The points indexer reads fee transfers on-chain to credit points. No account, email or sign-up exists.
+
+## What this version does not claim
+
+Limits are enforced by the MCP server's software, not by the chain or a smart wallet. A compromised machine or a modified binary could bypass them. An *enforced mode* with a session-key or smart-wallet signer is a named roadmap item; until it exists Potswap does not describe its limits as "enforceable". See [Limits and policies](/security/limits-and-policies/#how-limits-are-enforced) and [Key handling](/security/key-handling/).
+
+---
+
+# Limits and policies
+
+Source: https://docs.potswap.io/security/limits-and-policies/
+
+> The safety limits applied before anything is signed — per-trade cap, slippage cap, daily cap, dry run, confirm, the SOL reserve and output redaction — and how they are enforced in this version.
+
+Every signing path in `@potswap_io/mcp` (`swap`, `transfer`, `stake_sol` / `unstake_sol` and each strategy leg) runs the same checks **before** a transaction is built. A refused request returns an error that ends with `No funds were debited.` and nothing is signed.
+
+## The limits
+
+| Limit | Variable | Default | Check |
+|---|---|---|---|
+| Per-trade cap | `POTSWAP_MAX_TRADE_SOL` | `1` | The input's SOL-equivalent (SOL amount directly, or USD value ÷ SOL price) must not exceed the cap. Applies to `transfer` too. |
+| Token allowlist | `POTSWAP_ALLOWED_TOKENS` | unset | When set, both mints of a swap, stake or strategy leg must be on the list; checked before any quote. |
+| Recipient allowlist | `POTSWAP_ALLOWED_RECIPIENTS` | unset | When set, `transfer` only sends to listed addresses. |
+| Slippage cap | `POTSWAP_MAX_SLIPPAGE_BPS` | `300` (3%) | A requested `slippageBps` / `maxSlippageBps` above the cap is refused. |
+| Daily cap (strategies) | `POTSWAP_MAX_DAILY_SOL` | `5` | SOL-equivalent of all successful strategy legs in the current UTC day; a leg that would exceed the remainder is skipped. Resets at 00:00 UTC. |
+| Active strategies | `POTSWAP_MAX_STRATEGIES` | `10` | Creating an eleventh active strategy fails. |
+| SOL reserve | fixed | `0.01` SOL | Swaps that would spend below the reserve are refused: `Keep at least 0.01 SOL for fees.` |
+| Positive amount | — | — | `amount` must be a positive number in UI units. |
+
+The refusal copy names the limit and the configured value, for example:
+
+```text
+Refused by safety limit: 2 SOL ≈ 2.000 SOL is above POTSWAP_MAX_TRADE_SOL (1). No funds were debited.
+Refused by safety limit: slippage 5% is above POTSWAP_MAX_SLIPPAGE_BPS (3%). No funds were debited.
+Daily cap reached (5 SOL). Next legs resume at 00:00 UTC. No funds were debited.
+```
+
+When `amount` is 1,000,000 or more the per-trade refusal adds `Hint: amount is in UI units (1 = 1 SOL), not lamports.`
+
+If no USD price is known for a non-SOL input, the SOL-equivalent cannot be computed and the per-trade and daily caps do not apply to that order; the balance check and slippage cap still do.
+
+## Confirm
+
+Every write tool defaults to `confirm: false`. Without `confirm: true`:
+
+- `swap`, `stake_sol`, `unstake_sol` return `{ confirmRequired: true, quote }` and sign nothing; `transfer` returns `{ confirmRequired: true }`.
+- `dca_create`, `rebalance_create`, `tpsl_create`, `limit_order_create` return `Set confirm=true to create a strategy. Nothing was created and no funds were debited.`
+- `wallet_create` returns `Set confirm=true to create a wallet. Nothing was created.`
+
+Put the confirmation step in your agent's prompt or workflow: quote first, show the human, then call again with `confirm: true`.
+
+## Dry run
+
+`POTSWAP_DRY_RUN=true` (also `1` or `yes`) turns every signing path into a report:
+
+- `swap` with `confirm: true` returns `{ dryRun: true, quote }` with the text `DRY RUN, nothing signed`; `transfer` returns `{ dryRun: true }`.
+- Strategy legs are logged with outcome `dry-run` and the quote they would have executed. DCA runs still count toward `totalRuns`.
+
+Use it to watch an agent's decisions on real prices before giving it the ability to trade.
+
+## Redaction
+
+Everything that leaves the process passes through a redaction filter: tool text, `structuredContent`, stderr logs and the strategy state file. On wallet load the server registers every encoding of the secret (the raw value you supplied, its base58 form and its JSON byte-array form) and replaces any occurrence with `[REDACTED]`, including JSON arrays re-serialised with different whitespace. See [Key handling](/security/key-handling/).
+
+## Strategy-specific policies
+
+- A strategy pauses itself after **3 consecutive failed legs** with a `pausedReason`; skipped legs (caps) do not count.
+- Only one process per state directory runs the scheduler (PID lock).
+- Rebalance never touches an asset outside `targets`; take-profit / stop-loss never triggers on a missing price.
+
+## The transaction validator
+
+Since 0.7.0 every transaction is checked **before** the wallet signs it (`validateTransaction` in the SDK):
+
+- the fee payer must be the agent wallet;
+- every instruction whose program can be resolved from the message must be on the allow-list: System, Token, Token-2022, Associated Token, Compute Budget, Memo, Jupiter v6, Jupiter referral, Raydium CPMM, plus anything in `POTSWAP_ALLOWED_PROGRAMS`;
+- token `Approve` / `ApproveChecked` (delegation) and `SetAuthority` are refused; `CloseAccount` may only send rent to the wallet;
+- a System transfer from the wallet may only go to its own wSOL account, an allow-listed recipient, or stay under a small cap (the swap amount for aggregator orders);
+- programs reached through address-lookup tables cannot be resolved offline: they are counted as `unresolved`. Aggregator orders legitimately use lookup tables for DEX programs, so they are allowed `unresolved > 0`; transactions Potswap builds itself (direct route, transfers) are checked strictly.
+
+Refusals read `Refused by the transaction validator: <reason>. No funds were debited.` and nothing is signed.
+
+## Idempotent operations
+
+Pass an `opId` (4–64 characters) to `swap` and the server records the operation in `POTSWAP_STATE_DIR/operations.json`: `pending → sent → ok | failed | unknown`. Repeating a call with the same `opId`:
+
+| Stored state | Result |
+|---|---|
+| `ok` | the stored result is returned with `replayed: true`; nothing is sent again |
+| `failed` | a fresh attempt is made |
+| `pending`, `sent`, `unknown` | refused: `Operation <id> was already sent (signature …); check get_transaction before retrying with a new opId. Funds may have been debited.` |
+
+`unknown` is recorded when the send happened (or may have happened) but the outcome could not be read, for example when the execute call times out. `get_operation {id}` shows a record; without an id it lists recent ones. Give retrying agents a stable `opId` per intended trade so a network blip never doubles a position.
+
+## How limits are enforced
+
+**Limits are software-enforced in this version.** They live in the MCP server process on your machine and apply to every path that process signs. They are not enforced by the Solana runtime, by a smart wallet or by a session key. That means:
+
+- A different program using the same keypair is not bound by them.
+- A modified or compromised copy of the server could bypass them.
+- They protect against an agent making a mistake or being manipulated through its prompt, not against an attacker who already has your key.
+
+An **enforced mode** using a session-key or smart-wallet signer, where caps are checked on-chain, is a named roadmap item. Potswap will not describe limits as "enforceable" until it ships. Until then, the strongest control is the one that is already yours: a dedicated agent wallet holding only what the agent may spend.
+
+---
+
+# Key handling
+
+Source: https://docs.potswap.io/security/key-handling/
+
+> How the MCP server loads, uses and protects your Solana keypair, and how to supply one safely.
+
+## Supplying a key
+
+Two environment variables, checked in this order:
+
+| Variable | Format |
+|---|---|
+| `SOLANA_PRIVATE_KEY` | base58 secret key (64 bytes), base58 32-byte seed, or a JSON array of 64 integers 0–255 |
+| `SOLANA_KEYPAIR_PATH` | path to a `solana-keygen` JSON keypair file (a 64-byte JSON array) |
+
+`SOLANA_PRIVATE_KEY` wins when both are set. When neither is set the server runs read-only and every signing tool returns `Wallet not configured. Set SOLANA_PRIVATE_KEY or SOLANA_KEYPAIR_PATH. No funds were debited.`
+
+Generate a dedicated agent keypair:
+
+```bash
+solana-keygen new --no-bip39-passphrase -o ~/.config/solana/agent.json
+solana-keygen pubkey ~/.config/solana/agent.json
+```
+
+Fund that address with only what the agent should control.
+
+### Which to prefer
+
+- **`SOLANA_KEYPAIR_PATH`** keeps the secret out of your MCP host's config file, which is often synced or backed up. Prefer it where your host lets you reference a file path.
+- **`SOLANA_PRIVATE_KEY`** is convenient for hosts whose config is the only place to set env, such as Claude Desktop. Treat that config file as a secret.
+
+Invalid inputs fail fast at startup with one of:
+
+```text
+Private key is not valid base58 or a JSON byte array
+Keypair JSON must be an array of 64 bytes
+Private key has N bytes; expected 64 (or a 32-byte seed)
+Cannot read keypair file at SOLANA_KEYPAIR_PATH
+```
+
+## What happens to the key in-process
+
+1. The raw value is parsed into a `Keypair` once at startup. The secret lives only inside the wallet module's closure; the rest of the server sees a `Signer` with a `publicKey` string and a `sign(tx)` function.
+2. Every encoding the secret could leak in is registered with the redaction filter: the raw string you supplied, the base58 form of the 64-byte secret and the JSON byte-array form.
+3. `sign(tx)` signs a `VersionedTransaction` in memory and returns it. The server never writes the key to disk, never includes it in a request, and never logs it.
+
+## Redaction, everywhere
+
+All output paths pass through `redact()`:
+
+- tool results (both the text summary and `structuredContent`),
+- stderr log lines (stdout is the MCP transport and carries only protocol messages),
+- the strategy state file `strategies.json` before it is written.
+
+Any occurrence of a registered secret is replaced with `[REDACTED]`. JSON byte arrays are matched whitespace-insensitively so a re-serialised array does not slip through. This is a backstop: nothing in the normal code path puts the key in any of those places.
+
+## What the server sends over the network
+
+- To `POTSWAP_API`: order parameters, your **public** wallet address as `taker`, and the **signed** transaction (base64) with its `requestId`. Never the secret.
+- To `SOLANA_RPC_URL`: `getBalance` and `getParsedTokenAccountsByOwner` for a public address.
+
+## Threat model, honestly
+
+The key is as safe as the machine and the process that hold it. The server protects against the key leaking **through its own outputs** (to the LLM, to logs, to the state file) and against the key being sent anywhere. It cannot protect against:
+
+- malware or another user on the same machine reading the env or the keypair file,
+- an MCP host that logs its environment,
+- you pasting the key into a chat message.
+
+Mitigations: a dedicated agent wallet with limited funds, file permissions on the keypair file (`chmod 600`), low caps, and `POTSWAP_DRY_RUN` while evaluating. An enforced mode with a session-key or smart-wallet signer is on the [Roadmap](/resources/roadmap/).
+
+---
+
+# Points and POT
+
+Source: https://docs.potswap.io/economy/points-and-pot/
+
+> How the fee you pay becomes POT points today, and the specified economy around the POT token — Season 0 launch pool, 30-day seasons, reward balances with claim-now and limit claims, staking and burn.
+
+> **Status**
+The **points and economy engine** is built, tested and deployed: fee paid → points, Season 0 airdrop replay, 30-day season budgets, round-trip dampening, weights and levels, reward balances, claim intents and ladder, launch meter. It reports `enabled: false` from `get_points` / `get_leaderboard` until Potswap switches on the points database, and the meter shows 0 / 500 SOL until the pool address is published. **No token exists yet.** The token launch, the claims worker and the on-chain claim and staking programs, the burn and governance votes are the remaining pieces and are marked below.
+
+## Points today (built, pending activation)
+
+- **Reward basis.** The Potswap fee a wallet pays in an epoch, valued in USD at swap time. `swap` and every strategy leg return `feeUsd` and `pointsAdded`; they are equal when the fee is configured. Agents earn exactly like humans.
+- **Epoch.** One UTC day, 00:00–23:59:59.
+- **Daily split.** Each closed epoch allocates its POT budget across wallets by `fee^1.1 / Σ fee^1.1`, capped at **10%** of the epoch per wallet, with the excess redistributed pro rata among uncapped wallets. The exponent means splitting one wallet into two earns less, not more.
+- **Snapshots.** Each closed epoch publishes allocations and a deterministic Merkle root (`/api/epochs/:n`) for a Merkle-distributor claim.
+- **Unlock.** An epoch becomes claimable 7 days after it closes, or 7 days after the token launch for epochs before the token exists.
+- **Dust.** Swaps whose fee basis is below $0.005 are ignored.
+- **No fee, no points.** A swap that carries no Potswap fee (fee not configured, or a third-party client that omits it) earns 0 points. Failed transactions earn 0.
+
+What `get_points` returns once enabled: points this epoch, points all-time, POT allocated (closed epochs), POT claimable, next unlock date. `get_leaderboard` returns the top wallets by fee paid.
+
+The budget per epoch under the original Season 1 plan was **666,666 POT/day**; the seasons model below replaces that figure (Season 1 ≈ 667k/day, declining per season) while keeping the same daily mechanics.
+
+## The POT economy (P12)
+
+### Season 0 — the launch pool
+
+- 60% of each net fee (net = after Jupiter's 20%) moves to a published **launch-pool address**. The **launch meter** shows the pool balance against its target of **500 SOL**, read from chain. See [Launch meter](/economy/launch-meter/).
+- When the pool reaches 500 SOL a scripted, auditable launch runbook executes: mint 1,000,000,000 POT, revoke the mint authority, seed a Meteora / Raydium pool with 20% of POT plus all pool SOL, lock the LP, publish the Season 0 Merkle snapshots, start Season 1.
+- **No deposits, presales or contributions** are accepted from anyone; the only inflow is protocol fees.
+- **Season 0 airdrop (25% of supply):** day *k* of the pool period receives a slice proportional to that day's share of total fee basis; within the day wallets split by the daily rule above; day *k* unlocks at launch + *k* days as a Merkle claim.
+
+### Token allocation (at launch)
+
+| Allocation | Share | Rule |
+|---|---|---|
+| Launch LP | 20% | paired with all launch-pool SOL, LP locked |
+| Season 0 airdrop | 25% | day-by-day replay of the pool period |
+| Reward emissions | 30% | 120M trading seasons + 180M (plus rollovers) staking |
+| Governance treasury | 10% | grants, listings, Season 13+ |
+| Team | 15% | 24-month linear vest, 6-month cliff |
+
+### Fee split after launch
+
+| Net fee | Season 0 | Seasons 1+ |
+|---|---|---|
+| Launch pool | 60% | — |
+| User reward balances | 20% | 20% |
+| Buy-and-burn | — | 30% |
+| Team & operations | 20% | 50% |
+
+### Reward balances: claim now or limit claim
+
+- Each wallet accrues a **reward balance** equal to 20% of its net fees, in SOL, credited when the swap is priced. It is a POT purchase budget, never claimable as SOL, and never expires. It appears as `rewardBalanceSol` in `get_points` and on `/app/earnings`.
+- After launch, **Claim POT** buys POT on the market with the wallet's balance (routed through Potswap's own aggregator with a slippage cap) and sends the POT to the wallet. Claims are user-initiated, rate-limited per wallet, and may be **partial**. Timing claims — buying on dips — is the intended game.
+- **Limit claims:** convert up to N SOL of balance when POT ≤ price P; cancellable, optional expiry, partial fills, filled oldest-first and never above P.
+- Public stats: the **total unclaimed balance** (`unclaimedSol`) and the **pending claim ladder** by price band (no wallets, `claimLadder`) in `/api/stats` and `get_launch_status`.
+- `POST /api/claims` records a claim intent signed by the wallet (Ed25519 over a JSON message with `wallet`, `ts`, `action: claim | cancel`, `kind`, `amountSol`, `maxPriceUsd`, `expiresAt`); it returns 503 until the launch date, limits each wallet to one new claim per minute and 10 open claims, and never reserves more than the free balance. `GET /api/claims?wallet=…` lists a wallet's balance and claims.
+- v1 executes claims through a claims worker with a limited hot wallet refilled daily from the multisig; a trustless on-chain claim program (user-signed claim → swap by CPI → POT to user) is the first on-chain deliverable after launch.
+
+### Seasons 1+ (30 days each)
+
+- Season *n* budget: `20M × 0.85^(n−1)` POT for n = 1…12 (Season 1 ≈ 667k/day), distributed by the daily epoch mechanism with the 10% cap.
+- **Round-trip dampening:** a swap that reverses one from the same wallet within 10 minutes earns 25% points.
+- **Weights:** points = fee basis × season weights, each 1.0–2.0×, product capped at 2×. Season 1 has base weights only; Season 2 adds consumed observations; Season 3 adds strategy legs and POT/SOL LP; later seasons may add referrals and new protocols.
+- Anything undistributed (caps, empty epochs, dust) rolls to the staking pool.
+- **Levels** from all-time fee basis (Larva → Bee → Queen) persist across seasons with a permanent multiplier ≤ 1.25×; season leaderboards reset, the all-time board stays.
+- From Season 2, POT holders vote each season's weights, the fee (50–255 bps), the fee split (each slice 20–50%) and the budget (50–125% of formula).
+
+### Staking (live with the token)
+
+- Locks of 30 / 90 / 180 days at weights 1.0 / 1.5 / 2.0×.
+- Rewards stream daily from the staking pool (180M plus rollovers over 36 months, ≈165k/day at the start) pro rata by staked × weight; claimable any time; principal unlocks at lock end.
+- Staking at least `stakerMinPot` unlocks the **staker fee tier** (−100 bps). See [Fees](/routing/fees/).
+
+### Burn
+
+After launch, 30% of every net fee buys POT and burns it within the epoch at randomized times; burns are reported in `/api/stats`.
+
+## MCP surface
+
+`get_points` returns `rewardBalanceSol`, `level` and `season`; `get_launch_status` returns the meter, split, unclaimed balance and claim ladder (both since 0.4.0). `claim_pot`, `stake_pot` and `unstake_pot` arrive with the token. See the [Roadmap](/resources/roadmap/).
+
+---
+
+# Launch meter
+
+Source: https://docs.potswap.io/economy/launch-meter/
+
+> The public meter that tracks the fee-funded launch pool toward its 500 SOL target, what fills it, and what happens when it is full.
+
+> **Status**
+The meter is **live in the API, the web app and the MCP server** (`/api/launch-pool`, the landing page, `/app/earnings`, `get_launch_status`). It reads the pool balance from chain. Until Potswap publishes the launch-pool address it shows **0 / 500 SOL** with `enabled: false`. No fees are swept before the address is published and the Season 0 page has had legal review.
+
+## What it is
+
+A single public number: the SOL balance of the **launch-pool address**, read from chain, shown against a fixed target of **X = 500 SOL**. When the meter reaches X, the POT token launches.
+
+## What fills it
+
+Only protocol fees. During Season 0 (pre-launch), **60% of every net fee** (net = after Jupiter's 20%) moves to the launch-pool address by a daily treasury job that sweeps the referral accounts. The address is a Squads multisig once it holds more than 50 SOL.
+
+Nothing else can fill it:
+
+- No deposits, presales or contributions are accepted from anyone. The meter is a legal boundary, not a fundraising target; the design calls for legal review before it passes 50%.
+- The only way to move the meter is to trade through Potswap (web or MCP) and pay the fee.
+
+## Where it shows
+
+- **`GET /api/launch-pool`** — JSON, cached 60 s:
+
+```json
+{
+"enabled": true,
+"address": "<launch pool address>",
+"balanceSol": 125.4,
+"targetSol": 500,
+"pct": 25.08,
+"remainingSol": 374.6,
+"reached": false,
+"launch": null,
+"season": { "n": 0, "dayIndex": null, "start": null, "end": null },
+"splits": { "launchPool": 0.6, "rewardBalances": 0.2, "burn": 0, "team": 0.2 },
+"rules": "Only protocol fees enter the pool. No deposits, presales or contributions are accepted."
+}
+```
+
+`enabled: false` with `address: null` means the address is not published yet. An RPC failure adds `error: "Balance temporarily unavailable"` and keeps the shape.
+- **Landing page and `/app/earnings`** — the meter card, next to points this epoch, reward balance (SOL), season and level.
+- **MCP** — `get_launch_status` returns the same object plus `unclaimedSol`, `claimLadder` and `potDistributedMicro` from `/api/stats`.
+
+## What happens at X
+
+The launch runbook executes, scripted and auditable:
+
+1. Mint 1,000,000,000 POT; revoke the mint authority.
+2. Seed a Meteora / Raydium pool with 20% of supply and **all** pool SOL; lock the LP.
+3. Publish the Season 0 Merkle snapshots (the 25% airdrop, replayed day by day: day *k* unlocks at launch + *k* days).
+4. Start Season 1 (30 days, 20M POT ≈ 667k/day). `launch` in the API becomes the launch date; `season.n` becomes 1.
+
+From that point, the fee split changes to 20% reward balances / 30% burn / 50% team and operations, the launch pool receives nothing further, and `/api/claims` opens so reward balances can buy POT.
+
+## For agents
+
+Read the meter as public information: an agent may use it to decide when a Season 0 position is worth building (every day traded earns a slice of the 250M airdrop). Potswap exposes no way to contribute to the pool except trading. See [Points and POT](/economy/points-and-pot/) for the full economy.
+
+---
+
+# FAQ
+
+Source: https://docs.potswap.io/resources/faq/
+
+> Short answers to the questions developers ask before wiring an agent to Potswap.
+
+### Do I need an API key?
+
+No. The MCP server talks only to `potswap.io`, which adds its own Jupiter and RPC keys server-side. If you trade a lot, set `SOLANA_RPC_URL` to your own RPC for balance reads.
+
+### Does Potswap hold my funds or keys?
+
+No. The server runs on your machine and signs with your keypair in-process. Potswap's API receives your public address and already-signed transactions, never the secret. See [Non-custodial by design](/security/non-custodial/).
+
+### Can I try it without a wallet?
+
+Yes. Start without `SOLANA_PRIVATE_KEY` / `SOLANA_KEYPAIR_PATH` and the server runs read-only: search, token details, trending lists, price history, quotes, leaderboard, launch status, and balances / positions / points / history for any wallet you pass explicitly.
+
+### Can the agent make its own wallet?
+
+Yes. `wallet_create { confirm: true }` generates a keypair into `~/.potswap/wallet.json` (mode 0600) on your machine and prints the public key; fund it and the agent can trade. The secret is never returned to the agent or sent anywhere. Back the file up.
+
+### What does a swap cost?
+
+Potswap's fee is 2.5% of the input (1% when the input is worth $1,000 or more), charged inside the swap through Jupiter's referral program; Jupiter keeps 20% of it. The fee is only applied once Potswap's referral account is configured; until then `feeBps` is `0`. See [Fees](/routing/fees/).
+
+### Do agents earn the same rewards as humans?
+
+Yes. Points equal the fee paid, whoever paid it. An agent wallet earns exactly like a human wallet.
+
+### Are the points live?
+
+The engine (points, Season 0 airdrop replay, seasons, reward balances, claims, launch meter) is built and deployed, but the points database is not switched on yet: `get_points` and `get_leaderboard` return `{ enabled: false }` with a note, and `get_launch_status` shows 0 / 500 SOL until the pool address is published. See [Points and POT](/economy/points-and-pot/).
+
+### Can I send tokens, not just swap?
+
+Yes. `transfer` sends SOL or any SPL / Token-2022 token from the agent wallet with no Potswap fee, creating the recipient's token account if needed. It honours `POTSWAP_ALLOWED_RECIPIENTS`, the per-trade cap and the 0.01 SOL reserve.
+
+### Are there limit orders?
+
+Yes, as a strategy: `limit_order_create` fills once when the token's USD price crosses your trigger, through the normal swap path. A process (your MCP host or the daemon) must be running for it to fill.
+
+### Is `amount` in lamports?
+
+No. Every amount is in UI units of the input token: `1` = 1 SOL, `0.1` = 0.1 SOL. Passing raw units trips the per-trade cap with a hint.
+
+### Why did `swap` return a quote instead of swapping?
+
+It was called without `confirm: true`. That is by design; add `confirm: true` to execute.
+
+### What happens if a swap fails after signing?
+
+The result states whether funds were debited and includes `signature` and `explorerUrl` when a transaction was sent, so you can verify on Solscan. Common cases (slippage, expiry, congestion) report `No funds were debited`. See [Troubleshooting](/getting-started/troubleshooting/).
+
+### Are the limits enforceable?
+
+They are **software-enforced** by the MCP server process in this version, not by the chain or a smart wallet. They stop an agent from making a mistake; they do not stop someone who already has your key. An enforced mode is on the roadmap. See [Limits and policies](/security/limits-and-policies/).
+
+### Do strategies run when my laptop is closed?
+
+Only if a process is running them. Inside your MCP host they run while the host is open; for 24/7 run `npx -y @potswap_io/mcp --daemon` on an always-on machine. Potswap has no server-side scheduler. See [Strategies](/agents/strategies/).
+
+### Can two machines run the same strategies?
+
+They can share a state directory, but only one process holds the scheduler lock and trades. The other can list, create, pause and resume.
+
+### Is there an SDK or a CLI?
+
+Not yet. `@potswap/sdk` and the `potswap` CLI are roadmap items; today the only package is `@potswap_io/mcp`. See [Roadmap](/resources/roadmap/).
+
+### Is there a remote (hosted) MCP endpoint?
+
+Not yet. Only the local stdio server exists. A remote MCP that returns unsigned transactions is specified as a later phase.
+
+### Can agents stake SOL?
+
+Yes. `stake_sol` swaps SOL into jitoSOL (default) or mSOL at the best route; `unstake_sol` is the reverse. Normal fee and points apply.
+
+### Which DEXs does Potswap route through?
+
+Everything Jupiter Swap V2 aggregates: Metis, JupiterZ, DFlow and OKX compete per order. Direct Raydium / Orca / Meteora adapters are planned, not built. See [How routing works](/routing/how-routing-works/).
+
+### Where is the code?
+
+The MCP package is MIT licensed and published on npm as [`@potswap_io/mcp`](https://www.npmjs.com/package/@potswap_io/mcp). See [License](/resources/license/).
+
+---
+
+# Changelog
+
+Source: https://docs.potswap.io/resources/changelog/
+
+> Release notes for @potswap_io/mcp.
+
+## CLI 0.5.0 · SDK 0.4.1
+
+- `potswap admin sweep | claims | burn`: the owner-run treasury split, claims worker and buy-and-burn (dry-run until `--execute`), recording through `/api/admin/ledger` and `/api/admin/claims` with `CRON_SECRET`.
+- SDK: `PublicConfig` carries `season`, `splits`, `potMint`, `claimsOpen`; claim and fee-split helpers exported.
+
+## 0.8.0
+
+Lending and liquidity (with @potswap_io/sdk 0.4.0 and @potswap_io/cli 0.4.0).
+
+- `lend_markets`, `lend_positions`, `lend_deposit`, `lend_withdraw` on Jupiter Lend Earn: Jupiter builds the transaction, the validator checks it, the wallet signs, your RPC sends. Deposits pay the Potswap fee as a separate transfer after confirmation; withdrawals are free.
+- `lp_pools`, `lp_position`, `lp_deposit`, `lp_withdraw` on Raydium CPMM pools: deposits built locally with the fee in the same transaction; withdrawals free.
+- CLI: `potswap lend …` and `potswap lp …`.
+
+## 0.7.0
+
+Direct routing and the security core (with @potswap_io/sdk 0.3.0 and @potswap_io/cli 0.3.0).
+
+- **Transaction validator** on every signing path: fee payer, program allow-list (+ `POTSWAP_ALLOWED_PROGRAMS`), no delegation / authority changes, CloseAccount only to the wallet, bounded System transfers; lookup-table programs allowed only for aggregator orders.
+- **Idempotent operations**: `swap { opId }` records `pending → sent → ok | failed | unknown` in `operations.json`; repeats replay or refuse; new tool `get_operation`.
+- **Raydium CPMM direct route**: `get_quote.direct` (net of the same fee), `swap { route: "direct" | "auto" }` built, validated and signed locally, sent through your RPC. Pool discovery via `GET /api/raydium/pools`. Direct execution is enabled once Potswap publishes `feeWallet` in `/api/config`.
+- CLI: `potswap swap --route direct|auto --op-id <id>`.
+
+## 0.6.0
+
+Observations v1 (with @potswap_io/sdk 0.2.0 and @potswap_io/cli 0.2.0).
+
+- New tools `observe_publish`, `observe_query`, `observe_verify`, `observe_consume`: signed, slot-anchored market observations on the open Potswap index.
+- `limit_order_create` accepts `priceSource: "observations"` and `minPublishers`.
+- SDK: `Signer.signMessage`, `signObservation`, `verifyObservation`, `signConsumption`, `observedPrice`; API client methods for the index.
+- CLI: `potswap observe <mint…> --kinds … --interval …` (data bot) and `potswap observations <mint>`.
+
+## 0.5.0
+
+The MCP server now runs on `@potswap_io/sdk` (0.1.0); the `potswap` CLI (`@potswap_io/cli` 0.1.0) ships the same engine on the command line. Tool contracts unchanged (27 tools).
+
+## 0.4.0
+
+Launch status.
+
+- New tool `get_launch_status`: launch-pool meter (SOL collected / 500 target, read from chain), current season and day, fee split in force, total unclaimed reward balances and the public claim ladder. Works without a wallet.
+- `get_points` now carries `rewardBalanceSol` (20% of your net fees, set aside to buy POT after launch), `level` (Larva / Bee / Queen, up to ×1.25) and `season`.
+- Potswap API: `/api/launch-pool`, `/api/claims` (wallet-signed claim intents; open at launch), `/api/stats` adds `unclaimedSol`, `claimLadder` and `season`, `/api/config` adds `splits`, `season`, `launchPool`, `claimsOpen`.
+
+## 0.3.0
+
+Tier 1 agent capabilities.
+
+- `wallet_create` creates a keypair in `POTSWAP_STATE_DIR/wallet.json` (mode 0600) when no wallet is configured; the server loads it on later starts. The secret key is never returned.
+- `get_wallet`: public key, funding instructions, active limits and allowlists, scheduler status.
+- `transfer`: SOL and SPL / Token-2022 transfers built and signed locally, with recipient-ATA creation. No Potswap fee. Subject to `POTSWAP_ALLOWED_RECIPIENTS`, `POTSWAP_MAX_TRADE_SOL` and the 0.01 SOL reserve.
+- `get_transaction` (status, fee, the wallet's SOL and token balance changes) and `get_history` (parsed swaps, transfers, other).
+- `get_positions` now includes average cost, unrealised and realised PnL from the wallet's swap history.
+- `stake_sol` / `unstake_sol`: SOL ↔ jitoSOL (default) or mSOL through the shared swap engine, with the normal fee and points.
+- `get_price_history`: OHLCV candles from the token's top pool (`1m` to `1d`).
+- `limit_order_create`: a price-triggered buy or sell that fills once through the strategy scheduler, then completes.
+- New allowlists: `POTSWAP_ALLOWED_TOKENS` (every swap, strategy leg and stake must stay inside it) and `POTSWAP_ALLOWED_RECIPIENTS`.
+
+## 0.2.0
+
+Strategies and daemon mode.
+
+- New strategy tools: `dca_create`, `rebalance_create`, `tpsl_create`, `strategy_list`, `strategy_pause`, `strategy_resume`, `strategy_delete`, `strategy_runs`.
+- Scheduler runs inside the MCP server while the host is open; `npx -y @potswap_io/mcp --daemon` runs it headlessly 24/7.
+- Local JSON state in `~/.potswap/strategies.json` (override with `POTSWAP_STATE_DIR`), atomic writes, redacted before writing; a PID lock keeps one scheduler per state directory.
+- New limits: `POTSWAP_MAX_DAILY_SOL` (default 5) across all strategies per UTC day; `POTSWAP_MAX_STRATEGIES` (default 10). A strategy pauses itself after three consecutive failed legs.
+- Fee schedule shared with the web app: 2.5% standard, 1% at or above $1,000, staker tier wired but disabled until launch. `get_quote` returns `feeTier`, `feeLabel` and `scheduledFeeBps`.
+- `POTSWAP_DRY_RUN=true` applies to every strategy leg.
+
+## 0.1.0
+
+Initial release.
+
+- Local stdio MCP server, run with `npx -y @potswap_io/mcp`; Node 20+.
+- Tools: `search_tokens`, `get_token` (with risk badges), `get_trending`, `get_quote`, `swap`, `get_balances`, `get_positions`, `get_points`, `get_leaderboard`.
+- Non-custodial local signing from `SOLANA_PRIVATE_KEY` or `SOLANA_KEYPAIR_PATH`; read-only mode without a key.
+- Safety: `confirm: true` required for `swap`, `POTSWAP_MAX_TRADE_SOL` (1), `POTSWAP_MAX_SLIPPAGE_BPS` (300), `POTSWAP_DRY_RUN`, 0.01 SOL reserve, secret redaction on every output.
+- Every error states whether funds were debited.
+
+---
+
+# Roadmap
+
+Source: https://docs.potswap.io/resources/roadmap/
+
+> What is specified but not yet built, and what has shipped since the roadmap was written.
+
+Everything under **Planned** is not built. Do not build against any tool, package, endpoint or field listed there until it appears in the [Changelog](/resources/changelog/).
+
+## Shipped since the plan
+
+- **0.3.0 — Tier 1 agent capabilities:** `wallet_create`, `get_wallet`, `transfer` with a recipient allowlist, `get_transaction`, `get_history`, PnL on `get_positions`, `stake_sol` / `unstake_sol`, `get_price_history`, `limit_order_create`, `POTSWAP_ALLOWED_TOKENS`.
+- **0.4.0 — Launch status:** `get_launch_status`; `get_points` carries reward balance, level and season. API: `/api/launch-pool`, `/api/claims`, season and claim-ladder fields on `/api/stats` and `/api/config`.
+- **Agents-first web:** potswap.io home for humans and agents, and `/app/agents` with a config builder (host snippets, caps, dry run, allowlists), the tool overview and the live Season 0 panel.
+- **Observations v1 (MCP 0.6.0, SDK 0.2.0, CLI 0.2.0):** signed, slot-anchored observations with an open index (publish / query / verify / consume receipts), `observe_*` tools, `potswap observe` data bot, and `limit_order_create { priceSource: "observations" }`. See [Observations](/agents/observations/).
+- **Direct routing + security core (MCP 0.7.0, SDK 0.3.0, CLI 0.3.0):** Raydium CPMM direct quotes and swaps with fee parity, the transaction validator on every signing path, idempotent operations with an `unknown` state. See [Direct DEX routing](/routing/direct-dex-roadmap/).
+- **Lending and liquidity (MCP 0.8.0, SDK 0.4.0, CLI 0.4.0):** Jupiter Lend Earn deposits / withdrawals and Raydium CPMM liquidity through the same validator, limits and fee. See [Lending and liquidity](/agents/defi/).
+- **Economy engine (server side):** Season 0 airdrop replay, 30-day season budgets, round-trip dampening, weights and levels, reward balances, staking-pool rollover ledger, launch meter, claim intents. Live in code and deployed; waiting on the points database and the published pool address.
+
+## Planned
+
+Potswap's direction is fixed: the open execution and intelligence layer for Solana AI agents, in three layers — **Execute**, **Observe**, **Earn**. The order below is the planned sequence; it can change.
+
+### Agent capabilities (Execute)
+
+- Enforced mode (session-key / smart-wallet signer) so caps hold on-chain.
+- Idempotent operations with persistent operation ids and an explicit `UNKNOWN` state, so retries never duplicate a trade.
+- **Enforced mode**: a session-key or smart-wallet signer where caps are checked on-chain rather than in software.
+
+### Economy (Earn)
+
+- Points database switched on and the launch-pool address published; `get_points` and `get_leaderboard` return live data, the meter moves.
+- Daily treasury job (fee sweep per split) and the claims worker that executes claim intents.
+- Token launch runbook when the meter reaches 500 SOL.
+- MCP tools `claim_pot`, `stake_pot`, `unstake_pot` after launch.
+- Trustless claim program and staking program (on-chain, audited).
+- 30% buy-and-burn reported in `/api/stats`.
+
+See [Points and POT](/economy/points-and-pot/) and [Launch meter](/economy/launch-meter/).
+
+### Routing
+
+- Orca Whirlpools and Meteora DLMM adapters after the SDK reaches 1.0; Raydium AMM v4 / CLMM.
+- Simulate before sign; "saved vs X" history.
+
+See [Direct DEX routing (roadmap)](/routing/direct-dex-roadmap/).
+
+### Packages and distribution
+
+- **`@potswap/sdk`**: the MCP's core (API client, trade path, limits, strategies, policy) extracted into a standalone package. Does not exist yet.
+- **`potswap` CLI** over the SDK. Does not exist yet.
+- Remote MCP at `mcp.potswap.io` returning unsigned transactions plus a `submit_signed` tool; `/api/v1/quote` and `/api/v1/order` HTTP endpoints for non-MCP agents.
+- Solana Agent Kit and ElizaOS plugins; MCP registry listings; an installable agent skill.
+
+### Observations (Observe)
+
+- Reputation beyond consumption counts, on-chain anchoring of observation hashes, dispute handling, paid feeds.
+- Season 2 payout of the 20% observations budget by `publisherShares` (the hook exists; the season engine pays it from Season 2).
+
+### DeFi operations
+
+- Borrowing, more lending markets, concentrated liquidity (CLMM / Whirlpools / DLMM), auto-compounding, scheduler-driven LP strategies.
+
+### Non-goals
+
+A proprietary Potswap agent or chatbot, custodial services, paid-only features in the core, presales or deposits into the launch pool, cross-chain, and perps (for now).
+
+---
+
+# License
+
+Source: https://docs.potswap.io/resources/license/
+
+> The Potswap MCP server is released under the MIT License.
+
+`@potswap_io/mcp` is open source under the MIT License. You may use, copy, modify and redistribute it, including commercially, provided the copyright and permission notice are included.
+
+```text
+MIT License
+
+Copyright (c) 2026 Potswap
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Third-party services
+
+The server depends on services with their own terms: Jupiter (routing and execution), Solana RPC providers, and Potswap's hosted proxy at `potswap.io`. Trading on Solana carries market, smart-contract and operational risk; the software is provided without warranty, as the license states.

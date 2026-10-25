@@ -1,0 +1,57 @@
+{
+  "name": "@potswap_io/mcp",
+  "version": "0.8.0",
+  "description": "Potswap MCP server: best-route Solana swaps, wallet, transfers, staking, DCA / rebalance / take-profit / limit strategies and POT rewards for AI agents. Non-custodial; built on @potswap_io/sdk.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "potswap-mcp": "dist/index.js"
+  },
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/potswap-io/mcp.git"
+  },
+  "homepage": "https://www.potswap.io",
+  "keywords": [
+    "mcp",
+    "solana",
+    "swap",
+    "jupiter",
+    "ai-agent",
+    "potswap",
+    "model-context-protocol"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@potswap_io/sdk": "^0.4.0",
+    "@solana/web3.js": "^1.99.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "bugs": {
+    "url": "https://github.com/potswap-io/mcp/issues"
+  }
+}

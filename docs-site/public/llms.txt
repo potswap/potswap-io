@@ -1,0 +1,53 @@
+# Potswap Docs
+
+> Solana DeFi infrastructure for AI agents: best-route swaps (Jupiter Swap V2 meta-aggregation), DCA / rebalance / take-profit strategies and POT rewards through one non-custodial MCP server, `@potswap_io/mcp`. Install: `npx -y @potswap_io/mcp`.
+
+`@potswap_io/mcp` 0.4.0 (27 tools) is available today; the Potswap API serves quotes, orders, token data, points, the launch meter and claims. Pages marked roadmap or planned describe specified, unbuilt work. `@potswap_io/sdk` (the engine as a library) and `@potswap_io/cli` (the `potswap` command) are published too.
+
+## Overview
+
+- [Potswap Docs](https://docs.potswap.io/): Build on Solana with Potswap — best-route swaps, standing strategies and POT rewards for AI agents, through one non-custodial MCP server.
+
+## Getting started
+
+- [Introduction](https://docs.potswap.io/getting-started/introduction/): What Potswap is, who it is for, and what exists today versus what is planned.
+- [Quickstart](https://docs.potswap.io/getting-started/quickstart/): Add the Potswap MCP server to Claude Desktop, Claude Code or Cursor and get a first quote in minutes.
+- [Troubleshooting](https://docs.potswap.io/getting-started/troubleshooting/): The errors you will meet, what they mean, and what to do. Every Potswap error states whether funds were debited.
+
+## Agent integration
+
+- [MCP tools reference](https://docs.potswap.io/agents/mcp-tools/): Every tool exposed by @potswap_io/mcp 0.8.0 with its inputs, outputs and error behaviour.
+- [Strategies](https://docs.potswap.io/agents/strategies/): DCA, rebalance and take-profit / stop-loss as standing orders; who runs the clock, where state lives, and the caps that apply to every leg.
+- [Configuration](https://docs.potswap.io/agents/configuration/): Every environment variable read by @potswap_io/mcp, with defaults and parsing rules.
+- [SDK (@potswap_io/sdk)](https://docs.potswap.io/agents/sdk/): The engine behind the MCP server and the CLI as a typed Node library — quotes, swaps, transfers, wallet, history, PnL, strategies and the fee schedule — with the same limits and copy.
+- [CLI (potswap)](https://docs.potswap.io/agents/cli/): The potswap command line — quotes, swaps, staking, transfers, wallet, points, launch meter and strategy management with the same limits as the MCP server.
+- [Observations](https://docs.potswap.io/agents/observations/): Signed, slot-anchored market observations any agent can publish, query and verify through the open Potswap index — and use as the price source of a limit order.
+- [Lending and liquidity](https://docs.potswap.io/agents/defi/): Put idle balances to work through the same engine — Jupiter Lend Earn deposits and Raydium CPMM liquidity — with the same limits, validator and fee as swaps.
+
+## Routing & fees
+
+- [How routing works](https://docs.potswap.io/routing/how-routing-works/): Potswap quotes every order through Jupiter Swap V2 meta-aggregation, where Metis, JupiterZ, DFlow and OKX compete and the best net route wins.
+- [Fees](https://docs.potswap.io/routing/fees/): The Potswap fee schedule — 2.5% standard, 1% at or above $1,000, a staker discount later — how it is charged inside the swap, and how it becomes POT points.
+- [Direct DEX routing](https://docs.potswap.io/routing/direct-dex-roadmap/): The Raydium CPMM direct route next to the aggregator — how it is quoted, how the same fee is charged, how the transaction is built and validated locally — and the adapters still to come.
+
+## Security
+
+- [Non-custodial by design](https://docs.potswap.io/security/non-custodial/): Potswap never holds your keys or funds. The MCP server signs locally with your keypair, and Potswap's hosted services are read-only conveniences.
+- [Limits and policies](https://docs.potswap.io/security/limits-and-policies/): The safety limits applied before anything is signed — per-trade cap, slippage cap, daily cap, dry run, confirm, the SOL reserve and output redaction — and how they are enforced in this version.
+- [Key handling](https://docs.potswap.io/security/key-handling/): How the MCP server loads, uses and protects your Solana keypair, and how to supply one safely.
+
+## Economy
+
+- [Points and POT](https://docs.potswap.io/economy/points-and-pot/): How the fee you pay becomes POT points today, and the specified economy around the POT token — Season 0 launch pool, 30-day seasons, reward balances with claim-now and limit claims, staking and burn.
+- [Launch meter](https://docs.potswap.io/economy/launch-meter/): The public meter that tracks the fee-funded launch pool toward its 500 SOL target, what fills it, and what happens when it is full.
+
+## Resources
+
+- [FAQ](https://docs.potswap.io/resources/faq/): Short answers to the questions developers ask before wiring an agent to Potswap.
+- [Changelog](https://docs.potswap.io/resources/changelog/): Release notes for @potswap_io/mcp.
+- [Roadmap](https://docs.potswap.io/resources/roadmap/): What is specified but not yet built, and what has shipped since the roadmap was written.
+- [License](https://docs.potswap.io/resources/license/): The Potswap MCP server is released under the MIT License.
+
+## Full text
+
+- [llms-full.txt](https://docs.potswap.io/llms-full.txt): every page on this site as plain Markdown.
