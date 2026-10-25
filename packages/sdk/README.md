@@ -38,7 +38,7 @@ Every outcome is a tagged union (`no-wallet`, `refused`, `quote-only`, `dry-run`
 | `riskBadges`, `riskLevel`, `friendlyError`, `describeOrderError` | the same risk flags and error copy the web app shows |
 | `redact`, `redactValue`, `registerSecret`, `log` | secret redaction for anything you print or persist |
 
-Full documentation, including the MCP server and the CLI that are built on this package: https://potswap-docs.pages.dev
+Full documentation, including the MCP server and the CLI that are built on this package: https://docs.potswap.io
 
 ## Fees and rewards
 

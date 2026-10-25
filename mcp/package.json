@@ -1,6 +1,6 @@
 {
   "name": "@potswap_io/mcp",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Potswap MCP server: best-route Solana swaps, wallet, transfers, staking, DCA / rebalance / take-profit / limit strategies and POT rewards for AI agents. Non-custodial; built on @potswap_io/sdk.",
   "license": "MIT",
   "type": "module",
@@ -28,7 +28,7 @@
     "type": "git",
     "url": "git+https://github.com/potswap/potswap-io.git"
   },
-  "homepage": "https://www.potswap.io",
+  "homepage": "https://docs.potswap.io",
   "keywords": [
     "mcp",
     "solana",
@@ -40,7 +40,7 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
-    "@potswap_io/sdk": "^0.4.2",
+    "@potswap_io/sdk": "^0.4.3",
     "@solana/web3.js": "^1.99.0",
     "zod": "^4.6.7"
   },

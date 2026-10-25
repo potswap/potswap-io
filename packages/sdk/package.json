@@ -1,6 +1,6 @@
 {
   "name": "@potswap_io/sdk",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Potswap SDK: best-route Solana swaps with hard spending limits, transfers, wallet, strategies (DCA / rebalance / TP-SL / limit) and POT rewards. The engine behind @potswap_io/mcp and the potswap CLI. Non-custodial.",
   "license": "MIT",
   "type": "module",
@@ -31,7 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/potswap/potswap-io.git"
   },
-  "homepage": "https://potswap-docs.pages.dev",
+  "homepage": "https://docs.potswap.io",
   "keywords": [
     "solana",
     "swap",

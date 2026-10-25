@@ -45,4 +45,4 @@ Tokens are a mint address or `SOL`, `USDC`, `USDT`, `JITOSOL`, `MSOL`. Amounts a
 
 Create strategies with the MCP server (`dca_create`, `rebalance_create`, `tpsl_create`, `limit_order_create`); the CLI lists, pauses, resumes, deletes them and runs them with `potswap daemon`.
 
-Documentation: https://potswap-docs.pages.dev · MIT.
+Documentation: https://docs.potswap.io · MIT.

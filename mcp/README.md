@@ -128,7 +128,7 @@ Each swap carries Potswap's 2.5% integrator fee via Jupiter's referral program (
 
 **Season 0 (now, before the token):** 60% of the net fee fills the **launch pool**; when it reaches 500 SOL the POT token launches on its own liquidity pool. 20% of your net fee is set aside as your **reward balance** (in SOL): after launch it buys POT for you, when you say so (`claim now` at market, or a limit claim at your price). 20% runs the project. Every day you trade in Season 0 earns a slice of the **250M POT airdrop** (25% of supply), replayed day by day after launch: fee basis `fee^1.1`, capped at 10% of the day per wallet, round trips within 10 minutes count 25%.
 
-**Seasons 1+ (30 days each):** `20M × 0.85^(n−1)` POT per season shared daily by fee basis; 30% of the net fee buys and burns POT, 20% keeps feeding reward balances, 50% team and operations. Levels (Larva → Bee → Queen, up to ×1.25) persist across seasons. `get_points` shows your balance, level and season; `get_launch_status` shows the meter. Only protocol fees enter the pool: nothing can be deposited. Full documentation: https://potswap-docs.pages.dev (every tool, configuration, limits, economy; also as /llms.txt for agents).
+**Seasons 1+ (30 days each):** `20M × 0.85^(n−1)` POT per season shared daily by fee basis; 30% of the net fee buys and burns POT, 20% keeps feeding reward balances, 50% team and operations. Levels (Larva → Bee → Queen, up to ×1.25) persist across seasons. `get_points` shows your balance, level and season; `get_launch_status` shows the meter. Only protocol fees enter the pool: nothing can be deposited. Full documentation: https://docs.potswap.io (every tool, configuration, limits, economy; also as /llms.txt for agents).
 
 ## Owner jobs
 

@@ -1,6 +1,6 @@
 {
   "name": "@potswap_io/cli",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "potswap: command-line Solana swaps, transfers, wallet, strategies and POT rewards on the Potswap engine. Same limits and fee as the MCP server.",
   "license": "MIT",
   "type": "module",
@@ -28,7 +28,7 @@
     "type": "git",
     "url": "git+https://github.com/potswap/potswap-io.git"
   },
-  "homepage": "https://potswap-docs.pages.dev",
+  "homepage": "https://docs.potswap.io",
   "keywords": [
     "solana",
     "swap",
@@ -38,7 +38,7 @@
     "ai-agent"
   ],
   "dependencies": {
-    "@potswap_io/sdk": "^0.4.2",
+    "@potswap_io/sdk": "^0.4.3",
     "@solana/web3.js": "^1.99.0",
     "@solana/spl-token": "^0.4.15",
     "bs58": "^6.0.0"

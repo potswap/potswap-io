@@ -18,7 +18,7 @@ import type { StrategyStore } from '@potswap_io/sdk'
 import type { Scheduler } from '@potswap_io/sdk'
 import type { Token } from '@potswap_io/sdk'
 
-export const VERSION = '0.8.1'
+export const VERSION = '0.8.2'
 
 export interface ServerDeps {
   config?: Config

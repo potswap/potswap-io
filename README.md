@@ -10,7 +10,7 @@ Potswap is a non-custodial, local-first toolkit that gives any AI agent (and any
 | [`@potswap_io/sdk`](https://www.npmjs.com/package/@potswap_io/sdk) | The engine as a typed Node library | `npm i @potswap_io/sdk` |
 | [`@potswap_io/cli`](https://www.npmjs.com/package/@potswap_io/cli) | `potswap` command line (quotes, swaps, wallet, strategies, observations, lending, LP, owner jobs) | `npx -y @potswap_io/cli` |
 
-Documentation: https://potswap-docs.pages.dev (also `/llms.txt` for agents). Source of the docs site is in `docs-site/`.
+Documentation: https://docs.potswap.io (also `/llms.txt` for agents). Source of the docs site is in `docs-site/`.
 
 ## Develop
 
